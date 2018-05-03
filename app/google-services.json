@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "976598469409",
+    "firebase_url": "https://c-aulis.firebaseio.com",
+    "project_id": "c-aulis",
+    "storage_bucket": "c-aulis.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:976598469409:android:c6b20eeeeac8d5ff",
+        "android_client_info": {
+          "package_name": "com.deneme.caulis.caulis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "976598469409-ahq3lfr5gq0rfqjvs1sp6qchqvdbgf1l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.deneme.caulis.caulis",
+            "certificate_hash": "41862f4a8ab9b0993b5285dad20f9ee7e84da050"
+          }
+        },
+        {
+          "client_id": "976598469409-91cr0s25ucgt97uvq68sb7h3fp53dd39.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdloVk9UfLx6GaV6Z3Y8GEad7H7PatxZo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "976598469409-91cr0s25ucgt97uvq68sb7h3fp53dd39.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
