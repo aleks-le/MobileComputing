@@ -1,4 +1,4 @@
-package com.deneme.caulis.caulis;
+package com.deneme.caulis.caulis.Calendar;
 //package ganeshannt.calendarview;
 
 import android.content.Intent;
@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.CalendarView;
+
+import com.deneme.caulis.caulis.MainActivity;
+import com.deneme.caulis.caulis.R;
 
 public class CalendarActivity extends AppCompatActivity {
 
