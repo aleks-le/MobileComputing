@@ -8,8 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 
-import com.deneme.caulis.caulis.model.CalendarInterface;
-import com.deneme.caulis.caulis.model.User;
+import com.deneme.caulis.caulis.model.ConnectorInterface;
 import com.deneme.caulis.caulis.model.firebase.FirebaseConnector;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final CalendarInterface connector = FirebaseConnector.getInstance();
+        final ConnectorInterface connector = FirebaseConnector.getInstance();
 
         logInButton = (Button) findViewById(R.id.logInButton);
         logInButton.setOnClickListener(new View.OnClickListener() {
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 email = ((EditText)findViewById(R.id.emailTextBox)).getText().toString();
                 password = ((EditText)findViewById(R.id.passwordTextBox)).getText().toString();
-                connector.login(email,password);//dikkat!!
+                connector.login(email,password,MainActivity.this);//dikkat!!
             }
         });
         signInButton = (Button) findViewById(R.id.signInButton);
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 email = ((EditText)findViewById(R.id.emailTextBox)).getText().toString();
                 password = ((EditText)findViewById(R.id.passwordTextBox)).getText().toString();
-                connector.register(email,password);
+                connector.register(email,password,MainActivity.this);
             }
         });
 
