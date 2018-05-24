@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CalendarView;
 
 import com.deneme.caulis.caulis.MainActivity;
@@ -15,6 +17,8 @@ public class CalendarActivity extends AppCompatActivity {
 
     private  static final String TAG = "CalendarActivity";
     private CalendarView mCalendarView;
+    private Button eventButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +33,19 @@ public class CalendarActivity extends AppCompatActivity {
                 intent.putExtra("date",date);
                 startActivity(intent);
 
+            }
+        });
+
+        eventButton = (Button) findViewById(R.id.addEventButton);
+        eventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent = new Intent(CalendarActivity.this, EventActivity.class);
+                    startActivity(intent);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         });
     }
