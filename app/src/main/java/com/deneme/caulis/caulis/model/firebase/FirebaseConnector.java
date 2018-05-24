@@ -47,28 +47,11 @@ public class FirebaseConnector implements ConnectorInterface {
         //FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
-    //@TODO: Wrapper class araştır amg
-    //final değişken inner classta stringlerle editlendi
-    public void deneme(){
-        final int a[] = { 5};
-        Log.d("deneme", "deneme1:"+((Integer)a[0]).toString());
-        class innerClass{
-            public innerClass(){ }
-            public void innerDeneme(){
-                a[0] = 2;
-            }
-        }
-        innerClass i = new innerClass();
-        i.innerDeneme();
-        Log.d("deneme", "deneme2:"+((Integer)a[0]).toString());
-    }
 
     @Override
     public User login(final String login, final String password, final Activity activity) {
 // mAuth.createUserWithEmailAndPassword(email, password)...
-        //Executora dikkat et!!!!!
-        deneme();//gidici
-        final char userData[] = new char[1000];/**denenmedi*/
+
         mAuth.signInWithEmailAndPassword(login, password).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -77,8 +60,10 @@ public class FirebaseConnector implements ConnectorInterface {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("SignIn", "signInWithEmail:success");
                     FirebaseUser user = mAuth.getCurrentUser();
-                    User u = new User(user.getEmail(), password);//@TODO: düzenlenecek
-                    strcpy(userData , u.getUserData().toCharArray(), u.getUserData().length());/**denenmedi*/
+                    User u = new User(user.getEmail(), password);/**denenmedi*/
+                    if (activity instanceof LoginCallback) {
+                        ((LoginCallback) activity).userLoggedIn(u);
+                    }
                     Log.d("Connector", "Login successful.");
                     //updating user data
                 }else{
@@ -89,12 +74,6 @@ public class FirebaseConnector implements ConnectorInterface {
                 }
             }
         });
-        /**denenmedi*/
-        User newUser = new User();
-        String ss = new String(userData);
-        newUser.updateUserWithJSON(ss);
-        this.setUser(newUser);
-        /**denenmedi*/
         return null;
     }
 
@@ -128,11 +107,6 @@ public class FirebaseConnector implements ConnectorInterface {
     }
 
 
-    private void strcpy(char a[], char b[], int length){
-        for(int i=0 ; i<length ; i++){
-            a[i] = b[i];
-        }
-    }
 
 
 }

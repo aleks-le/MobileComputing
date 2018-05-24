@@ -3,6 +3,7 @@ package com.deneme.caulis.caulis;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,9 +11,10 @@ import android.widget.EditText;
 
 import com.deneme.caulis.caulis.Calendar.CalendarActivity;
 import com.deneme.caulis.caulis.model.ConnectorInterface;
+import com.deneme.caulis.caulis.model.User;
 import com.deneme.caulis.caulis.model.firebase.FirebaseConnector;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ConnectorInterface.LoginCallback {
     private Button signInButton;
     private Button logInButton;
     private String email;
@@ -71,5 +73,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void userLoggedIn(User user) {
+        Log.d("test", "User " + user + " logged in.");
     }
 }
