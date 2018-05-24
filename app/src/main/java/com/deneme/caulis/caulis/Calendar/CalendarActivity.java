@@ -17,7 +17,6 @@ public class CalendarActivity extends AppCompatActivity {
 
     private  static final String TAG = "CalendarActivity";
     private CalendarView mCalendarView;
-    private Button eventButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,15 +28,16 @@ public class CalendarActivity extends AppCompatActivity {
             public void onSelectedDayChange(CalendarView CalendarView, int year, int month, int dayOfMonth) {
                 String date = year + "/" + month + "/"+ dayOfMonth ;
                 Log.d(TAG, "onSelectedDayChange: yyyy/mm/dd:" + date);
-                Intent intent = new Intent(CalendarActivity.this,MainActivity.class);
+                Intent intent = new Intent(CalendarActivity.this,MainActivity.class);   //changes to do here
                 intent.putExtra("date",date);
                 startActivity(intent);
 
             }
         });
 
-        eventButton = (Button) findViewById(R.id.addEventButton);
-        eventButton.setOnClickListener(new View.OnClickListener() {
+
+        Button addEventButton = (Button) findViewById(R.id.addEventButton);
+        addEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {

@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements ConnectorInterfac
 
 
         Button calendarButton = (Button) findViewById(R.id.calendarButton);
-        denemeButton.setOnClickListener(new View.OnClickListener() {
+        calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
