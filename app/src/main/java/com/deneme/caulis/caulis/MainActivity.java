@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 
+import com.deneme.caulis.caulis.Calendar.CalendarActivity;
 import com.deneme.caulis.caulis.model.ConnectorInterface;
 import com.deneme.caulis.caulis.model.firebase.FirebaseConnector;
 
@@ -49,6 +50,20 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     Intent intent = new Intent(MainActivity.this, DenemeActivity.class);
+                    startActivity(intent);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        Button calendarButton = (Button) findViewById(R.id.calendarButton);
+        denemeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
                     startActivity(intent);
                 } catch(Exception e){
                     e.printStackTrace();
