@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class FirebaseConnector implements ConnectorInterface {
 
     private static FirebaseConnector INSTANCE = null;
+    private User user;
 
 
     private FirebaseAuth mAuth;
@@ -28,6 +29,9 @@ public class FirebaseConnector implements ConnectorInterface {
         return pageContext;
     }
 
+    public void setUser(User user){
+        this.user = user;
+    }
 
     public static FirebaseConnector getInstance() {
         if (INSTANCE == null) {
@@ -60,11 +64,11 @@ public class FirebaseConnector implements ConnectorInterface {
     }
 
     @Override
-    public User login(String login, final String password, final Activity activity) {
+    public User login(final String login, final String password, final Activity activity) {
 // mAuth.createUserWithEmailAndPassword(email, password)...
         //Executora dikkat et!!!!!
         deneme();//gidici
-
+        final char userData[] = new char[1000];/**denenmedi*/
         mAuth.signInWithEmailAndPassword(login, password).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -73,7 +77,8 @@ public class FirebaseConnector implements ConnectorInterface {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("SignIn", "signInWithEmail:success");
                     FirebaseUser user = mAuth.getCurrentUser();
-
+                    User u = new User(user.getEmail(), password);//@TODO: düzenlenecek
+                    strcpy(userData , u.getUserData().toCharArray(), u.getUserData().length());/**denenmedi*/
                     Log.d("Connector", "Login successful.");
                     //updating user data
                 }else{
@@ -84,11 +89,17 @@ public class FirebaseConnector implements ConnectorInterface {
                 }
             }
         });
+        /**denenmedi*/
+        User newUser = new User();
+        String ss = new String(userData);
+        newUser.updateUserWithJSON(ss);
+        this.setUser(newUser);
+        /**denenmedi*/
         return null;
     }
 
     @Override
-    public boolean register(String login, String password, final Activity activity) {
+    public boolean register(String login, final String password, final Activity activity) {
 // mAuth.createUserWithEmailAndPassword(email, password)...
                 //Executora dikkat et!!!!!
         mAuth.createUserWithEmailAndPassword(login, password)
@@ -99,7 +110,8 @@ public class FirebaseConnector implements ConnectorInterface {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Connector", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-//                            updateUI(user);
+                            User u = new User(user.getEmail(), password);//@TODO: düzenlenecek
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Connector", "createUserWithEmail:failure", task.getException());
@@ -113,6 +125,13 @@ public class FirebaseConnector implements ConnectorInterface {
                 });
 
         return false;
+    }
+
+
+    private void strcpy(char a[], char b[], int length){
+        for(int i=0 ; i<length ; i++){
+            a[i] = b[i];
+        }
     }
 
 
