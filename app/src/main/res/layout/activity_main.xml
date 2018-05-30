@@ -11,7 +11,7 @@
         android:id="@+id/imageView"
         android:layout_width="387dp"
         android:layout_height="218dp"
-        app:srcCompat="@drawable/MAIN_crop"
+        app:srcCompat="@drawable/main_crop"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 
