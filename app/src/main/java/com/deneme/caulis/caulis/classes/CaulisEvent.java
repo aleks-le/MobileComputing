@@ -22,4 +22,18 @@ public class CaulisEvent {
     private int authorID;
     /*private arraylist<> users;*/
 
+    public CaulisEvent(String name, Date startDate, Date endDate, Time startTime, Time endTime, String location, String description, int numberOfPeopleAllowed){
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.location = location;
+        this.description = description;
+        this.numberOfPeopleAllowed = numberOfPeopleAllowed;
+        //generate eventID
+        //get authorID
+        //create users
+    }
+
 }
