@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity implements ConnectorInterfac
     private String email;
     private String password;
 
+    private Button calendarButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

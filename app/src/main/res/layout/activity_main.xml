@@ -11,11 +11,16 @@
         android:id="@+id/imageView"
         android:layout_width="387dp"
         android:layout_height="218dp"
+<<<<<<< Updated upstream
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/main_crop" />
+=======
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
+>>>>>>> Stashed changes
 
     <EditText
         android:id="@+id/emailTextBox"

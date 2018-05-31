@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".DenemeActivity" />
-        <activity android:name=".Calendar.CalendarActivity"></activity>
+        <activity android:name=".Calendar.CalendarActivity" />
+        <activity android:name=".Calendar.DayActivity"></activity>
     </application>
 
 </manifest>
