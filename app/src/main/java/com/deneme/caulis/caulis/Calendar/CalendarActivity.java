@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.CheckBox;
+import android.widget.Toast;
 
 import com.deneme.caulis.caulis.MainActivity;
 import com.deneme.caulis.caulis.R;
@@ -18,6 +20,8 @@ public class CalendarActivity extends AppCompatActivity {
     private  static final String TAG = "CalendarActivity";
     private CalendarView mCalendarView;
     private Button addEventButton;
+    private Button goToEventListButton;
+    private CheckBox participateEvent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,4 +55,17 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
     }
+
+    public void addListenerOnCheckBox() {
+        participateEvent = (CheckBox) findViewById(R.id.participateEvent);
+        participateEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(((CheckBox) view).isChecked()) {
+                    Toast.makeText(CalendarActivity.this, "You only want to see the registrated events", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
 }
