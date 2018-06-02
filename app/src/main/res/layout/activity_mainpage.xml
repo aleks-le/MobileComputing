@@ -53,11 +53,13 @@
 
     <TextView
         android:id="@+id/MainPage_MainPageText"
-        android:layout_width="116dp"
-        android:layout_height="38dp"
+        android:layout_width="167dp"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
+
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text="Main page"
+        android:textSize="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/MainPage_ProfileButton" />
 
