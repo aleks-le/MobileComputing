@@ -18,10 +18,23 @@ import com.deneme.caulis.caulis.model.User;
 import com.deneme.caulis.caulis.model.firebase.FirebaseConnector;
 
 public class MainPageActivity extends AppCompatActivity {
+
+    private Button myProfileButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        myProfileButton = findViewById(R.id.MainPage_ProfileButton);
+        myProfileButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
 
 
     }
