@@ -20,6 +20,8 @@ import com.deneme.caulis.caulis.model.firebase.FirebaseConnector;
 public class MainPageActivity extends AppCompatActivity {
 
     private Button myProfileButton;
+    private Button logoutButton;
+    private Button myCalendarButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +33,48 @@ public class MainPageActivity extends AppCompatActivity {
         myProfileButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                // startActivity(new Intent(MainPageActivity.this, MyProfileActivity.class));
+
+                /*try {
+                    Intent intent = new Intent(MainPageActivity.this, MyProfileActivity.class);
+                    startActivity(intent);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }*/
 
             }
         });
+
+        myCalendarButton = findViewById(R.id.MainPage_CalendarButton);
+        myCalendarButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+               // startActivity(new Intent(MainPageActivity.this, CalendarActivity.class));
+
+                try {
+                    Intent intent = new Intent(MainPageActivity.this, CalendarActivity.class);
+                    startActivity(intent);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        logoutButton = findViewById(R.id.MainPage_LogoutButton);
+        logoutButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                 // startActivity(new Intent(MainPageActivity.this, MainActivity.class));
+
+                try {
+                    Intent intent = new Intent(MainPageActivity.this, MainActivity.class);
+                    startActivity(intent);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
 
 
