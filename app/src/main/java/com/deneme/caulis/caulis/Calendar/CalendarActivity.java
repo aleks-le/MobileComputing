@@ -54,6 +54,20 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
 
+        //we want to see all the event of the group or the event which you participate
+        Button listEventButton = (Button) findViewById(R.id.goToEventListButton);
+        listEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent = new Intent(CalendarActivity.this, EventActivity.class);
+                    startActivity(intent);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     public void addListenerOnCheckBox() {

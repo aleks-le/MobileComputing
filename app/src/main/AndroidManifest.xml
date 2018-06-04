@@ -19,7 +19,8 @@
         <activity android:name=".DenemeActivity" />
         <activity android:name=".Calendar.CalendarActivity" />
         <activity android:name=".Calendar.EventActivity" />
-        <activity android:name=".Calendar.DayActivity"></activity>
+        <activity android:name=".Calendar.DayActivity" />
+        <activity android:name=".Group.GroupActivity"></activity>
     </application>
 
 </manifest>
