@@ -36,6 +36,12 @@ public class MainActivity extends AppCompatActivity implements ConnectorInterfac
                 email = ((EditText)findViewById(R.id.emailTextBox)).getText().toString();
                 password = ((EditText)findViewById(R.id.passwordTextBox)).getText().toString();
                 connector.login(email,password,MainActivity.this);//dikkat!!
+                try {
+                    Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
+                    startActivity(intent);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         });
         signInButton = (Button) findViewById(R.id.signInButton);
