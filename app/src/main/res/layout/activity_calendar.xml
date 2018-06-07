@@ -13,7 +13,7 @@
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="312dp" />
 
     <Button
         android:id="@+id/addEventButton"
@@ -26,4 +26,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="See all the event" />
+
+    <Button
+        android:id="@+id/createGroupButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="create a group" />
 </LinearLayout>

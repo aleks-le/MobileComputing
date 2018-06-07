@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.deneme.caulis.caulis.MainActivity;
 import com.deneme.caulis.caulis.R;
+import com.deneme.caulis.caulis.Group.GroupActivity;
 
 public class CalendarActivity extends AppCompatActivity {
 
@@ -61,6 +62,19 @@ public class CalendarActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     Intent intent = new Intent(CalendarActivity.this, EventActivity.class);
+                    startActivity(intent);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        Button createGroupButton = (Button) findViewById(R.id.createGroupButton);
+        createGroupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent = new Intent(CalendarActivity.this, GroupActivity.class);
                     startActivity(intent);
                 } catch(Exception e){
                     e.printStackTrace();

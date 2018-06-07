@@ -182,7 +182,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Create"
+        android:text="Create the event"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/goBackToCalendarButton"
         app:layout_constraintStart_toStartOf="parent"

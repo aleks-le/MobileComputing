@@ -10,7 +10,6 @@ import android.widget.EditText;
 
 
 import com.deneme.caulis.caulis.Calendar.CalendarActivity;
-import com.deneme.caulis.caulis.Group.GroupActivity;
 import com.deneme.caulis.caulis.model.ConnectorInterface;
 import com.deneme.caulis.caulis.model.User;
 import com.deneme.caulis.caulis.model.firebase.FirebaseConnector;
@@ -75,19 +74,6 @@ public class MainActivity extends AppCompatActivity implements ConnectorInterfac
             public void onClick(View view) {
                 try {
                     Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-                    startActivity(intent);
-                } catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        Button createGroupButton = (Button) findViewById(R.id.createGroupButton);
-        createGroupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    Intent intent = new Intent(MainActivity.this, GroupActivity.class);
                     startActivity(intent);
                 } catch(Exception e){
                     e.printStackTrace();
