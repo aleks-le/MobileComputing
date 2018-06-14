@@ -9,7 +9,7 @@ package com.deneme.caulis.caulis.classes;
 import java.sql.Time;
 import java.util.Date;
 
-public class CaulisEvent {
+public class CaulisEvent implements CaulisClasses {
     private String name;
     private Date startDate;
     private Date endDate;
