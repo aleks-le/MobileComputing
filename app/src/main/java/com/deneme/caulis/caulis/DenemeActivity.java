@@ -96,7 +96,7 @@ public class DenemeActivity extends AppCompatActivity {
                 ((TextView)findViewById(R.id.denemeEkrani)).setText(c.getMessage());
             }
         });
-        //connector.setMessageListener(list,"1");
+        connector.setMessageListener(list,"1");
 
         CaulisList list2 = new CaulisList();
         connector.setGroupListener(list2);
