@@ -150,7 +150,7 @@ public class CaulisCalendar {
 
     private void loadAttributes(AttributeSet attrs, Context context) {
         if (attrs != null && context != null) {
-            TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.calendarView, 0, 0);
+            TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs,R.styleable.calendarView, 0, 0);
             try {
                 currentDayBackgroundColor = typedArray.getColor(R.styleable.calendarView_calendarCurrentDayBackgroundColor, currentDayBackgroundColor);
                 calendarTextColor = typedArray.getColor(R.styleable.calendarView_calendarTextColor, calendarTextColor);
