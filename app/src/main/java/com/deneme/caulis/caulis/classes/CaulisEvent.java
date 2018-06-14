@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CaulisEvent {
+public class CaulisEvent implements CaulisClasses{
 
     private Map<String, List<Events>> allEvents = new HashMap<>();
     private Calendar eventsCalendar;
