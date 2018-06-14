@@ -8,8 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-
 import com.deneme.caulis.caulis.Calendar.CalendarActivity;
+import com.deneme.caulis.caulis.Calendar.CalendarActivity2;
+import com.deneme.caulis.caulis.Calendar.CalendarTab;
+import com.deneme.caulis.caulis.Calendar.EventActivity;
+import com.deneme.caulis.caulis.Group.GroupActivity;
 import com.deneme.caulis.caulis.model.ConnectorInterface;
 import com.deneme.caulis.caulis.model.User;
 import com.deneme.caulis.caulis.model.firebase.FirebaseConnector;
@@ -74,6 +77,19 @@ public class MainActivity extends AppCompatActivity implements ConnectorInterfac
             public void onClick(View view) {
                 try {
                     Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+                    startActivity(intent);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        Button mainPageButton = (Button) findViewById(R.id.goToMainPage);
+        mainPageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
                     startActivity(intent);
                 } catch(Exception e){
                     e.printStackTrace();

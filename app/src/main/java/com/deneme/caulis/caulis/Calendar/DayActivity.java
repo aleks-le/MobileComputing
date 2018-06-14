@@ -7,13 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.deneme.caulis.caulis.MainActivity;
 import com.deneme.caulis.caulis.R;
 
 public class DayActivity extends AppCompatActivity {
 
     private TextView thedate;
-    private Button goToCalendarButton;
+    private Button goToCalendarButton, addEventDayButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +32,19 @@ public class DayActivity extends AppCompatActivity {
                     Intent intent = new Intent(DayActivity.this, CalendarActivity.class);
                     startActivity(intent);
                 } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        Button addEventDayButton = (Button) findViewById(R.id.addEventDayButton);
+        addEventDayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent = new Intent(DayActivity.this, EventActivity.class);
+                    startActivity(intent);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

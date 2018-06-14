@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<attr name="calendarEventIndicatorStyle" format="enum">
+    <enum name="fill_large_indicator" value="1" />
+    <enum name="no_fill_large_indicator" value="2" />
+    <enum name="small_indicator" value="3" />
+</attr>
+<attr name="calendarCurrentDayIndicatorStyle" format="enum">
+    <enum name="fill_large_indicator" value="1" />
+    <enum name="no_fill_large_indicator" value="2" />
+</attr>
+<attr name="calendarCurrentSelectedDayIndicatorStyle" format="enum">
+    <enum name="fill_large_indicator" value="1" />
+    <enum name="no_fill_large_indicator" value="2" />
+</attr>
+<declare-styleable name="calendarView">
+    <attr name="calendarTextSize" format="dimension"/>
+    <attr name="calendarBackgroundColor" format="color"/>
+    <attr name="calendarCurrentDayBackgroundColor" format="color"/>
+    <attr name="calendarCurrentDayTextColor" format="color"/>
+    <attr name="calendarCurrentSelectedDayBackgroundColor" format="color"/>
+    <attr name="calendarCurrentSelectedDayTextColor" format="color"/>
+    <attr name="calendarTextColor" format="color"/>
+    <attr name="calendarMultiEventIndicatorColor" format="color"/>
+    <attr name="calendarTargetHeight" format="dimension"/>
+    <attr name="calendarEventIndicatorStyle"/>
+    <attr name="calendarCurrentDayIndicatorStyle"/>
+    <attr name="calendarCurrentSelectedDayIndicatorStyle"/>
+    <attr name="calendarDisplayOtherMonthDays" format="boolean"/>
+    <attr name="calendarShouldSelectFirstDayOfMonthOnScroll" format="boolean"/>
+    <attr name="calendarOtherMonthDaysTextColor" format="color"/>
+</declare-styleable>
+</resources>
