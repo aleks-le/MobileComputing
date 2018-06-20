@@ -47,14 +47,17 @@ public class CaulisEvent {
             eventsForTargetDay.getEvents().add(event);
         }
         eventsByMonthAndYearMap.put(key, eventsForMonth);
-        keyList.add(key);
+
+        if(!keyList.contains(key)){
+            keyList.add(key);
+        }
     }
 
     void removeAllEvents() {
         eventsByMonthAndYearMap.clear();
     }
 
-    void addEvents(List<Event> events) {
+    public void addEvents(List<Event> events) {
         int count = events.size();
         for (int i = 0; i < count; i++) {
             addEvent(events.get(i));

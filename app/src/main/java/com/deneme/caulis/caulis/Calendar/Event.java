@@ -53,7 +53,10 @@ public class Event {
         this.location = location;
         this.description = description;
         this.timeInMillis = timeInMillis;
-        this.data = new Date(timeInMillis);
+        SimpleDateFormat d = new SimpleDateFormat("MM/dd/yyyy");
+        Date dateString = new Date(timeInMillis);
+        this.data = " " + d.format(dateString);
+        //this.data = new Date(timeInMillis);
         this.color = Color.argb(255, 169, 68, 65);
     }
 
