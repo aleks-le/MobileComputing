@@ -2,11 +2,18 @@ package com.deneme.caulis.caulis.Calendar;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
+import android.widget.OverScroller;
+
+//import com.github.sundeepk.CalendarView.domain.Event;
 
 import com.deneme.caulis.caulis.classes.CaulisCalendar;
 import com.deneme.caulis.caulis.classes.CaulisEvent;
@@ -23,8 +30,8 @@ public class CalendarView extends View {
     public static final int NO_FILL_LARGE_INDICATOR = 2;
     public static final int SMALL_INDICATOR = 3;
 
-    private final AnimationCalendar animationCalendar;
-    private CaulisCalendar calendarContainer;
+    private final AnimationCalendar animationHandler;
+    private CaulisCalendar compactCalendarController;
     private GestureDetectorCompat gestureDetector;
     private boolean horizontalScrollEnabled = true;
 
@@ -33,7 +40,7 @@ public class CalendarView extends View {
         public void onMonthScroll(Date firstDayOfNewMonth);
     }
 
-    public interface CalendarAnimationListener {
+    public interface CompactCalendarAnimationListener {
         public void onOpened();
         public void onClosed();
     }
@@ -45,7 +52,7 @@ public class CalendarView extends View {
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            calendarContainer.onSingleTapUp(e);
+            compactCalendarController.onSingleTapUp(e);
             invalidate();
             return super.onSingleTapUp(e);
         }
@@ -66,7 +73,7 @@ public class CalendarView extends View {
                 if (Math.abs(distanceX) > 0) {
                     getParent().requestDisallowInterceptTouchEvent(true);
 
-                    calendarContainer.onScroll(e1, e2, distanceX, distanceY);
+                    compactCalendarController.onScroll(e1, e2, distanceX, distanceY);
                     invalidate();
                     return true;
                 }
@@ -76,22 +83,34 @@ public class CalendarView extends View {
         }
     };
 
-    public CalendarView(Context context) {this(context, null);}
+    public CalendarView(Context context) {
+        this(context, null);
+    }
 
-    public CalendarView(Context context, AttributeSet attrs) {this(context, attrs, 0);}
+    public CalendarView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
     public CalendarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        calendarContainer = new CaulisCalendar(attrs, getContext(), new CaulisEvent(Calendar.getInstance()),Locale.getDefault(), TimeZone.getDefault());
-        animationCalendar = new AnimationCalendar(calendarContainer, this);
+        compactCalendarController = new CaulisCalendar(new Paint(), new OverScroller(getContext()),
+                new Rect(), attrs, getContext(),  Color.argb(255, 233, 84, 81),
+                Color.argb(255, 64, 64, 64), Color.argb(255, 219, 219, 219), VelocityTracker.obtain(),
+                Color.argb(255, 100, 68, 65), new CaulisEvent(Calendar.getInstance()),
+                Locale.getDefault(), TimeZone.getDefault());
+        gestureDetector = new GestureDetectorCompat(getContext(), gestureListener);
+        animationHandler = new AnimationCalendar(compactCalendarController, this);
     }
 
-    public void setAnimationListener(CalendarAnimationListener calendarAnimationListener){
-        animationCalendar.setCalendarAnimationListener(calendarAnimationListener);
+    public void setAnimationListener(CompactCalendarAnimationListener compactCalendarAnimationListener){
+        animationHandler.setCompactCalendarAnimationListener(compactCalendarAnimationListener);
     }
 
+    /*
+    Use a custom locale for compact calendar and reinitialise the view.
+     */
     public void setLocale(TimeZone timeZone, Locale locale){
-        calendarContainer.setLocale(timeZone, locale);
+        compactCalendarController.setLocale(timeZone, locale);
         invalidate();
     }
 
@@ -101,12 +120,12 @@ public class CalendarView extends View {
     Setting this to true will displace the short weekday string provided by java.
      */
     public void setUseThreeLetterAbbreviation(boolean useThreeLetterAbbreviation){
-        calendarContainer.setUseWeekDayAbbreviation(useThreeLetterAbbreviation);
+        compactCalendarController.setUseWeekDayAbbreviation(useThreeLetterAbbreviation);
         invalidate();
     }
 
     public void setCalendarBackgroundColor(final int calenderBackgroundColor) {
-        calendarContainer.setCalendarBackgroundColor(calenderBackgroundColor);
+        compactCalendarController.setCalenderBackgroundColor(calenderBackgroundColor);
         invalidate();
     }
 
@@ -115,151 +134,249 @@ public class CalendarView extends View {
     Works best with 3-4 characters for each day.
      */
     public void setDayColumnNames(String[] dayColumnNames){
-        calendarContainer.setDayColumnNames(dayColumnNames);
+        compactCalendarController.setDayColumnNames(dayColumnNames);
     }
 
     public void setFirstDayOfWeek(int dayOfWeek){
-        calendarContainer.setFirstDayOfWeek(dayOfWeek);
+        compactCalendarController.setFirstDayOfWeek(dayOfWeek);
         invalidate();
     }
 
     public void setCurrentSelectedDayBackgroundColor(int currentSelectedDayBackgroundColor) {
-        calendarContainer.setCurrentSelectedDayBackgroundColor(currentSelectedDayBackgroundColor);
+        compactCalendarController.setCurrentSelectedDayBackgroundColor(currentSelectedDayBackgroundColor);
         invalidate();
     }
 
     public void setCurrentDayBackgroundColor(int currentDayBackgroundColor) {
-        calendarContainer.setCurrentDayBackgroundColor(currentDayBackgroundColor);
+        compactCalendarController.setCurrentDayBackgroundColor(currentDayBackgroundColor);
         invalidate();
     }
 
     public int getHeightPerDay(){
-        return calendarContainer.getHeightPerDay();
+        return compactCalendarController.getHeightPerDay();
     }
 
     public void setListener(CalendarViewListener listener){
-        calendarContainer.setListener(listener);
+        compactCalendarController.setListener(listener);
     }
 
     public Date getFirstDayOfCurrentMonth(){
-        return calendarContainer.getFirstDayOfCurrentMonth();
+        return compactCalendarController.getFirstDayOfCurrentMonth();
     }
 
     public void shouldDrawIndicatorsBelowSelectedDays(boolean shouldDrawIndicatorsBelowSelectedDays){
-        calendarContainer.shouldDrawIndicatorsBelowSelectedDays(shouldDrawIndicatorsBelowSelectedDays);
+        compactCalendarController.shouldDrawIndicatorsBelowSelectedDays(shouldDrawIndicatorsBelowSelectedDays);
     }
 
     public void setCurrentDate(Date dateTimeMonth){
-        calendarContainer.setCurrentDate(dateTimeMonth);
+        compactCalendarController.setCurrentDate(dateTimeMonth);
         invalidate();
     }
 
     public int getWeekNumberForCurrentMonth(){
-        return calendarContainer.getWeekNumberForCurrentMonth();
+        return compactCalendarController.getWeekNumberForCurrentMonth();
     }
 
     public void setShouldDrawDaysHeader(boolean shouldDrawDaysHeader){
-        calendarContainer.setShouldDrawDaysHeader(shouldDrawDaysHeader);
+        compactCalendarController.setShouldDrawDaysHeader(shouldDrawDaysHeader);
     }
 
     public void setCurrentSelectedDayTextColor(int currentSelectedDayTextColor) {
-        calendarContainer.setCurrentSelectedDayTextColor(currentSelectedDayTextColor);
+        compactCalendarController.setCurrentSelectedDayTextColor(currentSelectedDayTextColor);
     }
 
     public void setCurrentDayTextColor(int currentDayTextColor) {
-        calendarContainer.setCurrentDayTextColor(currentDayTextColor);
+        compactCalendarController.setCurrentDayTextColor(currentDayTextColor);
     }
 
+    /**
+     * see {@link #addEvent(Event, boolean)} when adding single events to control if calendar should redraw
+     * or {@link #addEvents(java.util.List)}  when adding multiple events
+     * @param event
+     */
     public void addEvent(Event event){
         addEvent(event, true);
     }
 
+    /**
+     *  Adds an event to be drawn as an indicator in the calendar.
+     *  If adding multiple events see {@link #addEvents(List)}} method.
+     * @param event to be added to the calendar
+     * @param shouldInvalidate true if the view should invalidate
+     */
     public void addEvent(Event event, boolean shouldInvalidate){
-        calendarContainer.addEvent(event);
+        compactCalendarController.addEvent(event);
         if(shouldInvalidate){
             invalidate();
         }
     }
+
+    /**
+     * Adds multiple events to the calendar and invalidates the view once all events are added.
+     */
     public void addEvents(List<Event> events){
-        calendarContainer.addEvents(events);
+        compactCalendarController.addEvents(events);
         invalidate();
     }
 
-    public List<Event> getEvents(Date date){return calendarContainer.getCalendarEventsFor(date.getTime());}
+    /**
+     * Fetches the events for the date passed in
+     * @param date
+     * @return
+     */
+    public List<Event> getEvents(Date date){
+        return compactCalendarController.getCalendarEventsFor(date.getTime());
+    }
 
-    public List<Event> getEvents(long epochMillis){return calendarContainer.getCalendarEventsFor(epochMillis);}
+    /**
+     * Fetches the events for the epochMillis passed in
+     * @param epochMillis
+     * @return
+     */
+    public List<Event> getEvents(long epochMillis){
+        return compactCalendarController.getCalendarEventsFor(epochMillis);
+    }
 
-    public List<Event> getEventsForMonth(long epochMillis){return calendarContainer.getCalendarEventsForMonth(epochMillis);}
+    public List<Event> getAllEvents(){
+        return compactCalendarController.getAllEvents();
+    }
 
-    public List<Event> getEventsForMonth(Date date){return calendarContainer.getCalendarEventsForMonth(date.getTime());}
+    /**
+     * Fetches the events for the month of the epochMillis passed in and returns a sorted list of events
+     * @param epochMillis
+     * @return
+     */
+    public List<Event> getEventsForMonth(long epochMillis){
+        return compactCalendarController.getCalendarEventsForMonth(epochMillis);
+    }
+
+    /**
+     * Fetches the events for the month of the date passed in and returns a sorted list of events
+     * @param date
+     * @return
+     */
+    public List<Event> getEventsForMonth(Date date){
+        return compactCalendarController.getCalendarEventsForMonth(date.getTime());
+    }
+
+    /**
+     * Remove the event associated with the Date passed in
+     * @param date
+     */
+    public void removeEvents(Date date){
+        compactCalendarController.removeEventsFor(date.getTime());
+    }
+
+    public void removeEvents(long epochMillis){
+        compactCalendarController.removeEventsFor(epochMillis);
+    }
+
+    /**
+     * see {@link #removeEvent(Event, boolean)} when removing single events to control if calendar should redraw
+     * or {@link #removeEvents(java.util.List)} (java.util.List)}  when removing multiple events
+     * @param event
+     */
+    public void removeEvent(Event event){
+        removeEvent(event, true);
+    }
+
+    /**
+     * Removes an event from the calendar.
+     * If removing multiple events see {@link #removeEvents(List)}
+     *
+     * @param event event to remove from the calendar
+     * @param shouldInvalidate true if the view should invalidate
+     */
+    public void removeEvent(Event event, boolean shouldInvalidate){
+        compactCalendarController.removeEvent(event);
+        if(shouldInvalidate){
+            invalidate();
+        }
+    }
+
+    /**
+     * Removes multiple events from the calendar and invalidates the view once all events are added.
+     */
+    public void removeEvents(List<Event> events){
+        compactCalendarController.removeEvents(events);
+        invalidate();
+    }
+
+    /**
+     * Clears all Events from the calendar.
+     */
+    public void removeAllEvents() {
+        compactCalendarController.removeAllEvents();
+        invalidate();
+    }
 
     public void shouldSelectFirstDayOfMonthOnScroll(boolean shouldSelectFirstDayOfMonthOnScroll){
-        calendarContainer.setShouldSelectFirstDayOfMonthOnScroll(shouldSelectFirstDayOfMonthOnScroll);
+        compactCalendarController.setShouldSelectFirstDayOfMonthOnScroll(shouldSelectFirstDayOfMonthOnScroll);
     }
 
     public void setCurrentSelectedDayIndicatorStyle(final int currentSelectedDayIndicatorStyle){
-        calendarContainer.setCurrentSelectedDayIndicatorStyle(currentSelectedDayIndicatorStyle);
+        compactCalendarController.setCurrentSelectedDayIndicatorStyle(currentSelectedDayIndicatorStyle);
         invalidate();
     }
 
     public void setCurrentDayIndicatorStyle(final int currentDayIndicatorStyle){
-        calendarContainer.setCurrentDayIndicatorStyle(currentDayIndicatorStyle);
+        compactCalendarController.setCurrentDayIndicatorStyle(currentDayIndicatorStyle);
         invalidate();
     }
 
     public void setEventIndicatorStyle(final int eventIndicatorStyle){
-        calendarContainer.setEventIndicatorStyle(eventIndicatorStyle);
+        compactCalendarController.setEventIndicatorStyle(eventIndicatorStyle);
         invalidate();
     }
 
     private void checkTargetHeight() {
-        if (calendarContainer.getTargetHeight() <= 0) {
+        if (compactCalendarController.getTargetHeight() <= 0) {
             throw new IllegalStateException("Target height must be set in xml properties in order to expand/collapse CompactCalendar.");
         }
     }
 
     public void displayOtherMonthDays(boolean displayOtherMonthDays){
-        calendarContainer.setDisplayOtherMonthDays(displayOtherMonthDays);
+        compactCalendarController.setDisplayOtherMonthDays(displayOtherMonthDays);
         invalidate();
     }
 
     public void setTargetHeight(int targetHeight){
-        calendarContainer.setTargetHeight(targetHeight);
+        compactCalendarController.setTargetHeight(targetHeight);
         checkTargetHeight();
     }
 
     public void showCalendar(){
         checkTargetHeight();
-        animationCalendar.openCalendar();
+        animationHandler.openCalendar();
     }
 
     public void hideCalendar(){
         checkTargetHeight();
-        animationCalendar.closeCalendar();
+        animationHandler.closeCalendar();
     }
 
     public void showCalendarWithAnimation(){
         checkTargetHeight();
-        animationCalendar.openCalendarWithAnimation();
+        animationHandler.openCalendarWithAnimation();
     }
 
     public void hideCalendarWithAnimation(){
         checkTargetHeight();
-        animationCalendar.closeCalendarWithAnimation();
+        animationHandler.closeCalendarWithAnimation();
     }
 
     public void showNextMonth(){
-        calendarContainer.showNextMonth();
+        compactCalendarController.showNextMonth();
         invalidate();
     }
 
     public void showPreviousMonth(){
-        calendarContainer.showPreviousMonth();
+        compactCalendarController.showPreviousMonth();
         invalidate();
     }
 
     public boolean isAnimating(){
-        return animationCalendar.isAnimating();
+        return animationHandler.isAnimating();
     }
 
     @Override
@@ -268,20 +385,20 @@ public class CalendarView extends View {
         int width = MeasureSpec.getSize(parentWidth);
         int height = MeasureSpec.getSize(parentHeight);
         if(width > 0 && height > 0) {
-            calendarContainer.onMeasure(width, height, getPaddingRight(), getPaddingLeft());
+            compactCalendarController.onMeasure(width, height, getPaddingRight(), getPaddingLeft());
         }
         setMeasuredDimension(width, height);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        calendarContainer.onDraw(canvas);
+        compactCalendarController.onDraw(canvas);
     }
 
     @Override
     public void computeScroll() {
         super.computeScroll();
-        if(calendarContainer.computeScroll()){
+        if(compactCalendarController.computeScroll()){
             invalidate();
         }
     }
@@ -292,7 +409,7 @@ public class CalendarView extends View {
 
     public boolean onTouchEvent(MotionEvent event) {
         if (horizontalScrollEnabled) {
-            calendarContainer.onTouch(event);
+            compactCalendarController.onTouch(event);
             invalidate();
         }
 
@@ -315,4 +432,3 @@ public class CalendarView extends View {
     }
 
 }
-

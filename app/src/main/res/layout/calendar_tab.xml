@@ -13,8 +13,8 @@
         android:layout_height="250dp"
         app:calendarTargetHeight="250dp"
         app:calendarTextSize="12sp"
-        app:calendarBackgroundColor="#ffe95451"
-        app:calendarTextColor="#fff"
+        app:calendarBackgroundColor="#ffffff"
+        app:calendarTextColor="#000000"
         app:calendarCurrentSelectedDayBackgroundColor="#ffbd5f5f"
         app:calendarCurrentDayBackgroundColor="#B71C1C"
         app:calendarCurrentDayIndicatorStyle="fill_large_indicator"
@@ -64,5 +64,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
     </ListView>
+
+    <Button
+        android:id="@+id/addEventButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/calendar_view"
+        android:layout_toEndOf="@+id/prev_button"
+        android:text="Add event" />
+
+    <Button
+        android:id="@+id/addGroupButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/calendar_view"
+        android:layout_toStartOf="@+id/next_button"
+        android:text="Add group" />
 
 </RelativeLayout>

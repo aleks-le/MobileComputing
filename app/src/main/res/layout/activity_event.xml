@@ -7,36 +7,6 @@
     tools:context=".Calendar.Event">
 
     <TextView
-        android:id="@+id/peopleNumber"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Number of people allowed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
-
-    <TextView
-        android:id="@+id/startTime"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Start time"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startDate" />
-
-    <TextView
-        android:id="@+id/endTime"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="End time"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endDate" />
-
-    <TextView
         android:id="@+id/description"
         android:layout_width="100dp"
         android:layout_height="40dp"
@@ -54,7 +24,7 @@
         android:layout_marginTop="16dp"
         android:text="Location of the event"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endTime" />
+        app:layout_constraintTop_toBottomOf="@+id/endDate" />
 
     <TextView
         android:id="@+id/startDate"
@@ -74,7 +44,7 @@
         android:layout_marginTop="16dp"
         android:text="End date"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startTime" />
+        app:layout_constraintTop_toBottomOf="@+id/startDate" />
 
     <TextView
         android:id="@+id/vorname"
@@ -98,37 +68,17 @@
         app:layout_constraintTop_toBottomOf="@+id/eventName" />
 
     <EditText
-        android:id="@+id/eventStartTime"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="time"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventStartDate" />
-
-    <EditText
-        android:id="@+id/eventEndTime"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="time"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventEndDate" />
-
-    <EditText
         android:id="@+id/eventEndDate"
-        android:layout_width="wrap_content"
+        android:layout_width="216dp"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="date"
+        android:text="Only if different from Start Date"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventStartTime" />
+        app:layout_constraintTop_toBottomOf="@+id/eventStartDate" />
 
     <EditText
         android:id="@+id/eventDescription"
@@ -142,17 +92,6 @@
         app:layout_constraintTop_toBottomOf="@+id/eventLocation" />
 
     <EditText
-        android:id="@+id/eventNumberOfPeopleAllowed"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventDescription" />
-
-    <EditText
         android:id="@+id/eventLocation"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
@@ -161,7 +100,7 @@
         android:ems="10"
         android:inputType="textPostalAddress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventEndTime" />
+        app:layout_constraintTop_toBottomOf="@+id/eventEndDate" />
 
     <EditText
         android:id="@+id/eventName"
@@ -181,12 +120,10 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="Create the event"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/goBackToCalendarButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/peopleNumber" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/goBackToCalendarButton"
@@ -194,11 +131,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="60dp"
-        android:layout_marginTop="8dp"
         android:text="Go back"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventNumberOfPeopleAllowed"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,14 +1,21 @@
 package com.deneme.caulis.caulis.Calendar;
 
-import android.support.annotation.Nullable;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.deneme.caulis.caulis.R;
+
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 
 public class CalendarActivity2 extends AppCompatActivity {
 
@@ -16,17 +23,57 @@ public class CalendarActivity2 extends AppCompatActivity {
     private ViewPager pager;
     private ViewTabAdapter adapter;
     private SlidingTabLayout tabs;
-    private CharSequence titles[]= {"Calendar","Events"};
+    private CharSequence titles[]= {"Home","Events"};
     private int numberOfTabs = 2;
+    private List<Event> newEvent = new ArrayList<Event>();
+    private Event newSingleEvent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar2);
 
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        Intent intent = getIntent();
+        if(intent != null){
+            String name = null;
+            Date startDate = null;
+            Date endDate = null;
+            Time startTime = null;
+            Time endTime = null;
+            String location = null;
+            String description = null;
+            int numberOfPeopleAllowed = 0;
+            long timeInMillis = 0;
+
+            if(intent.hasExtra("Name")){
+                name = intent.getStringExtra("Name");
+            }
+            if(intent.hasExtra("StarDate")){
+                startDate = (Date)intent.getSerializableExtra("StartDate");
+            }
+            if(intent.hasExtra("EndDate")){
+                endDate = (Date)intent.getSerializableExtra("EndDate");
+            }
+            if(intent.hasExtra("Location")){
+                location = intent.getStringExtra("Location");
+            }
+            if(intent.hasExtra("Description")){
+                description = intent.getStringExtra("Description");
+            }
+            if(intent.hasExtra("TimeInMillis")){
+                timeInMillis = intent.getLongExtra("TimeInMillis",0);
+            }
+
+
+            newSingleEvent = new Event(name, startDate, endDate, location, description, timeInMillis);
+            newEvent.add(newSingleEvent);
+
+        }
+
+
+        /*toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);*/
 
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
         adapter =  new ViewTabAdapter(getSupportFragmentManager(), titles, numberOfTabs);
@@ -43,7 +90,7 @@ public class CalendarActivity2 extends AppCompatActivity {
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.colorAccent); //PEUT ETRE CHANGER LA COULEUR
+                return getResources().getColor(R.color.black);
             }
         });
 
@@ -73,4 +120,6 @@ public class CalendarActivity2 extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public List<Event> getNewEvent(){return this.newEvent;}
+    public Event getNewSingleEvent(){return  this.newSingleEvent;}
 }

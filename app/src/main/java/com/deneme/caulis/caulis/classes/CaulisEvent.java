@@ -6,36 +6,39 @@
 package com.deneme.caulis.caulis.classes;
 
 
+
 import com.deneme.caulis.caulis.Calendar.Event;
+import com.deneme.caulis.caulis.Calendar.EventComparator;
 import com.deneme.caulis.caulis.Calendar.Events;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class CaulisEvent implements CaulisClasses{
+public class CaulisEvent {
 
-    private Map<String, List<Events>> allEvents = new HashMap<>();
+    private Map<String, List<Events>> eventsByMonthAndYearMap = new HashMap<>();
+    private List<String> keyList = new ArrayList<String>();
+    private Comparator<Event> eventsComparator = new EventComparator();
     private Calendar eventsCalendar;
 
-    public CaulisEvent(Calendar eventsCalendar){
+    public CaulisEvent(Calendar eventsCalendar) {
         this.eventsCalendar = eventsCalendar;
     }
-
 
     public void addEvent(Event event) {
         eventsCalendar.setTimeInMillis(event.getTimeInMillis());
         String key = getKeyForCalendarEvent(eventsCalendar);
-        List<Events> eventsForMonth = allEvents.get(key);
+        List<Events> eventsForMonth = eventsByMonthAndYearMap.get(key);
         if (eventsForMonth == null) {
             eventsForMonth = new ArrayList<>();
         }
-        Events eventsForTargetDay = getEventsDay(event.getTimeInMillis());
+        Events eventsForTargetDay = getEventDayEvent(event.getTimeInMillis());
         if (eventsForTargetDay == null) {
             List<Event> events = new ArrayList<>();
             events.add(event);
@@ -43,7 +46,12 @@ public class CaulisEvent implements CaulisClasses{
         } else {
             eventsForTargetDay.getEvents().add(event);
         }
-        allEvents.put(key, eventsForMonth);
+        eventsByMonthAndYearMap.put(key, eventsForMonth);
+        keyList.add(key);
+    }
+
+    void removeAllEvents() {
+        eventsByMonthAndYearMap.clear();
     }
 
     void addEvents(List<Event> events) {
@@ -53,11 +61,68 @@ public class CaulisEvent implements CaulisClasses{
         }
     }
 
-    public Events getEventsDay(long eventTimeInMillis){
+    List<Event> getEventsFor(long epochMillis) {
+        Events events = getEventDayEvent(epochMillis);
+        if (events == null) {
+            return new ArrayList<>();
+        } else {
+            return events.getEvents();
+        }
+    }
+
+    List<Events> getEventsForMonthAndYear(int month, int year){
+        return eventsByMonthAndYearMap.get(year + "_" + month);
+    }
+
+    List<Event> getEventsForMonth(long eventTimeInMillis){
+        eventsCalendar.setTimeInMillis(eventTimeInMillis);
+        String keyForCalendarEvent = getKeyForCalendarEvent(eventsCalendar);
+        List<Events> events = eventsByMonthAndYearMap.get(keyForCalendarEvent);
+        List<Event> allEventsForMonth = new ArrayList<>();
+        if (events != null) {
+            for(Events eve : events){
+                if (eve != null) {
+                    allEventsForMonth.addAll(eve.getEvents());
+                }
+            }
+        }
+        Collections.sort(allEventsForMonth, eventsComparator);
+        return allEventsForMonth;
+    }
+
+    public List<Event> getAllEvents(){
+        List<Event> allEvents = new ArrayList<Event>();
+        for(int i=0; i<keyList.size(); i++){
+            List<Events> temp = eventsByMonthAndYearMap.get(keyList.get(i));
+            if(temp != null){
+                for(Events eve : temp){
+                    allEvents.addAll(eve.getEvents());
+                }
+            }
+        }
+        Collections.sort(allEvents, eventsComparator);
+        return allEvents;
+        /*
+        List<Event> allEvents = new ArrayList<Event>();
+        for(int i=0; i<12; i++){
+            List<Events> temp = getEventsForMonthAndYear(i,2018);
+            if (temp != null) {
+                for(Events eve : temp){
+                    if (eve != null) {
+                        allEvents.addAll(eve.getEvents());
+                    }
+                }
+            }
+        }
+        Collections.sort(allEvents, eventsComparator);
+        return allEvents;*/
+    }
+
+    private Events getEventDayEvent(long eventTimeInMillis){
         eventsCalendar.setTimeInMillis(eventTimeInMillis);
         int dayInMonth = eventsCalendar.get(Calendar.DAY_OF_MONTH);
         String keyForCalendarEvent = getKeyForCalendarEvent(eventsCalendar);
-        List<Events> eventsForMonthsAndYear = allEvents.get(keyForCalendarEvent);
+        List<Events> eventsForMonthsAndYear = eventsByMonthAndYearMap.get(keyForCalendarEvent);
         if (eventsForMonthsAndYear != null) {
             for (Events events : eventsForMonthsAndYear) {
                 eventsCalendar.setTimeInMillis(events.getTimeInMillis());
@@ -70,32 +135,57 @@ public class CaulisEvent implements CaulisClasses{
         return null;
     }
 
-    public List<Event> getEventsFor(long epochMillis) {
-        Events events = getEventsDay(epochMillis);
-        if (events == null) {
-            return new ArrayList<>();
-        } else {
-            return events.getEvents();
-        }
-    }
-
-    public List<Event> getEventsForMonth(long eventTimeInMillis){
-        eventsCalendar.setTimeInMillis(eventTimeInMillis);
-        String keyForCalendarEvent = getKeyForCalendarEvent(eventsCalendar);
-        List<Events> events = allEvents.get(keyForCalendarEvent);
-        List<Event> allEventsForMonth = new ArrayList<>();
-        if (events != null) {
-            for(Events eve : events){
-                if (eve != null) {
-                    allEventsForMonth.addAll(eve.getEvents());
+    void removeEventByEpochMillis(long epochMillis) {
+        eventsCalendar.setTimeInMillis(epochMillis);
+        int dayInMonth = eventsCalendar.get(Calendar.DAY_OF_MONTH);
+        String key = getKeyForCalendarEvent(eventsCalendar);
+        List<Events> eventsForMonthAndYear = eventsByMonthAndYearMap.get(key);
+        if (eventsForMonthAndYear != null) {
+            Iterator<Events> calendarDayEventIterator = eventsForMonthAndYear.iterator();
+            while (calendarDayEventIterator.hasNext()) {
+                Events next = calendarDayEventIterator.next();
+                eventsCalendar.setTimeInMillis(next.getTimeInMillis());
+                int dayInMonthFromCache = eventsCalendar.get(Calendar.DAY_OF_MONTH);
+                if (dayInMonthFromCache == dayInMonth) {
+                    calendarDayEventIterator.remove();
+                    break;
                 }
             }
+            if (eventsForMonthAndYear.isEmpty()) {
+                eventsByMonthAndYearMap.remove(key);
+            }
         }
-        return allEventsForMonth;
     }
 
-    List<Events> getEventsForMonthAndYear(int month, int year){
-        return allEvents.get(year + "_" + month);
+    void removeEvent(Event event) {
+        eventsCalendar.setTimeInMillis(event.getTimeInMillis());
+        String key = getKeyForCalendarEvent(eventsCalendar);
+        List<Events> eventsForMonthAndYear = eventsByMonthAndYearMap.get(key);
+        if (eventsForMonthAndYear != null) {
+            Iterator<Events> eventsForMonthYrItr = eventsForMonthAndYear.iterator();
+            while(eventsForMonthYrItr.hasNext()) {
+                Events events = eventsForMonthYrItr.next();
+                int indexOfEvent = events.getEvents().indexOf(event);
+                if (indexOfEvent >= 0) {
+                    if (events.getEvents().size() == 1) {
+                        eventsForMonthYrItr.remove();
+                    } else {
+                        events.getEvents().remove(indexOfEvent);
+                    }
+                    break;
+                }
+            }
+            if (eventsForMonthAndYear.isEmpty()) {
+                eventsByMonthAndYearMap.remove(key);
+            }
+        }
+    }
+
+    void removeEvents(List<Event> events) {
+        int count = events.size();
+        for (int i = 0; i < count; i++) {
+            removeEvent(events.get(i));
+        }
     }
 
     //E.g. 4 2016 becomes 2016_4
@@ -103,40 +193,4 @@ public class CaulisEvent implements CaulisClasses{
         return cal.get(Calendar.YEAR) + "_" + cal.get(Calendar.MONTH);
     }
 
-
-
-
-
-
-
-
-     /*
-    private String name;
-    private Date startDate;
-    private Date endDate;
-    private Time startTime;
-    private Time endTime;
-    private String location;
-    private String description;
-    private int numberOfPeopleAllowed;//Not necessary
-    private int eventID;
-    private int authorID;
-    /*private arraylist<> users;*/
-
-    /*
-    public CaulisEvent(String name, Date startDate, Date endDate, Time startTime, Time endTime, String location, String description, int numberOfPeopleAllowed){
-        this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.location = location;
-        this.description = description;
-        this.numberOfPeopleAllowed = numberOfPeopleAllowed;
-        //generate eventID
-        //get authorID
-        //create users
-    }*/
-
 }
-

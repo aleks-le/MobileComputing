@@ -1,5 +1,7 @@
 package com.deneme.caulis.caulis.Calendar;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,10 +20,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.deneme.caulis.caulis.Calendar.CalendarView;
-import com.deneme.caulis.caulis.Calendar.Event;
+import com.deneme.caulis.caulis.Group.GroupActivity;
 import com.deneme.caulis.caulis.R;
-
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class CalendarTab extends Fragment {
     private Calendar currentCalender = Calendar.getInstance(Locale.getDefault());
     private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a", Locale.getDefault());
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMM - yyyy", Locale.getDefault());
-    private CalendarView calendarView;
+    private CalendarView compactCalendarView;
     private ActionBar toolbar;
 
     @Override
@@ -47,28 +47,51 @@ public class CalendarTab extends Fragment {
         View v = inflater.inflate(R.layout.calendar_tab,container,false);
 
         final List<String> mutableBookings = new ArrayList<>();
-
         final ListView bookingsListView = (ListView) v.findViewById(R.id.bookings_listview);
         final Button showPreviousMonthBut = (Button) v.findViewById(R.id.prev_button);
         final Button showNextMonthBut = (Button) v.findViewById(R.id.next_button);
+        final Button addEventButton = (Button) v.findViewById(R.id.addEventButton);
+        final Button addGroupButton = (Button) v.findViewById(R.id.addGroupButton);
+        final CalendarActivity2 activity2 = (CalendarActivity2) getActivity();
 
 
         final ArrayAdapter adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, mutableBookings);
         bookingsListView.setAdapter(adapter);
-        calendarView = (CalendarView) v.findViewById(R.id.calendar_view);
+        compactCalendarView = (CalendarView) v.findViewById(R.id.calendar_view);
 
         // below allows you to configure color for the current day in the month
         // compactCalendarView.setCurrentDayBackgroundColor(getResources().getColor(R.color.black));
         // below allows you to configure colors for the current day the user has selected
         // compactCalendarView.setCurrentSelectedDayBackgroundColor(getResources().getColor(R.color.dark_red));
-        calendarView.setUseThreeLetterAbbreviation(false);
-        calendarView.setFirstDayOfWeek(Calendar.MONDAY);
+        compactCalendarView.setUseThreeLetterAbbreviation(false);
+        compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
 
-        //loadEvents();
-        //loadEventsForYear(2017);
-        calendarView.invalidate();
+        /*if(activity2.getNewSingleEvent() != null) {
+            long startDate = activity2.getNewSingleEvent().getStartDate().getTime();
+            long endDate = activity2.getNewSingleEvent().getEndDate().getTime();
+            long compteur = startDate;
+            while(compteur < endDate) {
+                Event temp = new Event(activity2.getNewSingleEvent().getName(), activity2.getNewSingleEvent().getStartDate(), activity2.getNewSingleEvent().getEndDate(),
+                        activity2.getNewSingleEvent().getLocation(), activity2.getNewSingleEvent().getDescription(), compteur);
+                compactCalendarView.addEvent(temp);
+                compteur += 1000*60*60*24;
+            }
+        }*/
 
-        logEventsByMonth(calendarView);
+        if(activity2.getNewSingleEvent().getStartDate() != activity2.getNewSingleEvent().getEndDate()){
+            Event temp = new Event(activity2.getNewSingleEvent().getName(), activity2.getNewSingleEvent().getEndDate(), activity2.getNewSingleEvent().getEndDate(),
+                    activity2.getNewSingleEvent().getLocation(), activity2.getNewSingleEvent().getDescription(), activity2.getNewSingleEvent().getEndDate().getTime());
+            compactCalendarView.addEvent(temp);
+        }
+        compactCalendarView.addEvent(activity2.getNewSingleEvent());
+
+
+
+        loadEvents();
+        loadEventsForYear(2017);
+        compactCalendarView.invalidate();
+
+        logEventsByMonth(compactCalendarView);
 
         // below line will display Sunday as the first day of the week
         // compactCalendarView.setShouldShowMondayAsFirstDay(false);
@@ -84,20 +107,21 @@ public class CalendarTab extends Fragment {
 
         //set initial title
         toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        toolbar.setTitle(dateFormatForMonth.format(calendarView.getFirstDayOfCurrentMonth()));
+        toolbar.setTitle(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
+
 
         //set title on calendar scroll
-        calendarView.setListener(new CalendarView.CalendarViewListener() {
+        compactCalendarView.setListener(new CalendarView.CalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
                 toolbar.setTitle(dateFormatForMonth.format(dateClicked));
-                List<Event> bookingsFromMap = calendarView.getEvents(dateClicked);
+                List<Event> bookingsFromMap = compactCalendarView.getEvents(dateClicked);
                 Log.d(TAG, "inside onclick " + dateFormatForDisplaying.format(dateClicked));
                 if (bookingsFromMap != null) {
                     Log.d(TAG, bookingsFromMap.toString());
                     mutableBookings.clear();
                     for (Event booking : bookingsFromMap) {
-                        mutableBookings.add(booking.getDescription());
+                        mutableBookings.add(((String) booking.getName() + " (" + booking.getLocation() + ") " + " : " + booking.getDescription()));
                     }
                     adapter.notifyDataSetChanged();
                 }
@@ -113,20 +137,42 @@ public class CalendarTab extends Fragment {
         showPreviousMonthBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calendarView.showPreviousMonth();
+                compactCalendarView.showPreviousMonth();
             }
         });
 
         showNextMonthBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calendarView.showNextMonth();
+                compactCalendarView.showNextMonth();
             }
         });
 
+        addEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent = new Intent(getActivity(), EventActivity.class);
+                    startActivity(intent);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
 
+        addGroupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent intent = new Intent(getActivity(), GroupActivity.class);
+                    startActivity(intent);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
 
-        calendarView.setAnimationListener(new CalendarView.CalendarAnimationListener() {
+        compactCalendarView.setAnimationListener(new CalendarView.CompactCalendarAnimationListener() {
             @Override
             public void onOpened() {
             }
@@ -159,7 +205,7 @@ public class CalendarTab extends Fragment {
                 } else {
                     layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
-                calendarView.showCalendarWithAnimation();
+                compactCalendarView.showCalendarWithAnimation();
             }
         });
     }
@@ -167,12 +213,11 @@ public class CalendarTab extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        toolbar.setTitle(dateFormatForMonth.format(calendarView.getFirstDayOfCurrentMonth()));
+        toolbar.setTitle(dateFormatForMonth.format(compactCalendarView.getFirstDayOfCurrentMonth()));
         // Set to current day on resume to set calendar to latest day
         // toolbar.setTitle(dateFormatForMonth.format(new Date()));
     }
 
-    /*
     private void loadEvents() {
         addEvents(-1, -1);
         addEvents(Calendar.DECEMBER, -1);
@@ -183,7 +228,7 @@ public class CalendarTab extends Fragment {
         addEvents(Calendar.DECEMBER, year);
         addEvents(Calendar.AUGUST, year);
     }
-    */
+
 
     private void logEventsByMonth(CalendarView compactCalendarView) {
         currentCalender.setTime(new Date());
@@ -197,7 +242,6 @@ public class CalendarTab extends Fragment {
         Log.d(TAG, "Events for Aug month using default local and timezone: " + compactCalendarView.getEventsForMonth(currentCalender.getTime()));
     }
 
-    /*
     private void addEvents(int month, int year) {
         currentCalender.setTime(new Date());
         currentCalender.set(Calendar.DAY_OF_MONTH, 1);
@@ -217,27 +261,28 @@ public class CalendarTab extends Fragment {
 
             List<Event> events = getEvents(timeInMillis, i);
 
-            calendarView.addEvents(events);
+            compactCalendarView.addEvents(events);
         }
     }
-    */
 
-    /*
+    public List<Event> getAllEvents(){
+        return compactCalendarView.getAllEvents();
+    }
+
     private List<Event> getEvents(long timeInMillis, int day) {
         if (day < 2) {
-            return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)));
+            return Arrays.asList(new Event("Tennis", new Date(timeInMillis), new Date(timeInMillis), "Viertel", "match with Thommy", timeInMillis, Color.argb(255, 169, 68, 65)));
         } else if ( day > 2 && day <= 4) {
             return Arrays.asList(
-                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)),
-                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)));
+                    new Event("Birthday (me)", new Date(timeInMillis), new Date(timeInMillis), "Home", "This is my birthday", timeInMillis, Color.argb(255, 169, 68, 65)),
+                    new Event("Exam", new Date(timeInMillis), new Date(timeInMillis), "HochScule", "German exam", timeInMillis, Color.argb(255, 100, 68, 65)));
         } else {
             return Arrays.asList(
-                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis) ),
-                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)),
-                    new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Event 3 at " + new Date(timeInMillis)));
+                    new Event("Trip to Hamburg", new Date(timeInMillis), new Date(timeInMillis), "Hamburg", "I will go see friends in Hamburg", timeInMillis,Color.argb(255, 169, 68, 65)),
+                    new Event("Buy a gift for my parents", new Date(timeInMillis), new Date(timeInMillis), "Domsheide", "Don't forget to buy gift for their birthday", timeInMillis,Color.argb(255, 100, 68, 65)),
+                    new Event("Birthday of my brother", new Date(timeInMillis), new Date(timeInMillis), "Home", "This is the birthday of my brother", timeInMillis,Color.argb(255, 70, 68, 65)));
         }
     }
-    */
 
     private void setToMidnight(Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -245,4 +290,5 @@ public class CalendarTab extends Fragment {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
     }
+
 }

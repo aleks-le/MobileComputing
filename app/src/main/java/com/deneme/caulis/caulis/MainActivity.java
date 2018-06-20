@@ -76,27 +76,13 @@ public class MainActivity extends AppCompatActivity implements ConnectorInterfac
             @Override
             public void onClick(View view) {
                 try {
-                    Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+                    Intent intent = new Intent(MainActivity.this, CalendarActivity2.class);
                     startActivity(intent);
                 } catch(Exception e){
                     e.printStackTrace();
                 }
             }
         });
-
-        Button mainPageButton = (Button) findViewById(R.id.goToMainPage);
-        mainPageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
-                    startActivity(intent);
-                } catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        });
-
 
     }
 

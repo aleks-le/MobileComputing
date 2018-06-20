@@ -7,11 +7,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.CalendarContract;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
+import java.time.format.DateTimeFormatter;
 
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -82,35 +88,46 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.saveEventButton:
-                if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                /*if(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
                     return;
-                }
+                }*/
                 Calendar cal = Calendar.getInstance();
                 String name = ((TextView) findViewById(R.id.eventName)).getText().toString();
-                Date startDate = (Date) ((TextView) findViewById(R.id.eventStartDate)).getText();
-                Date endDate = (Date) ((TextView) findViewById(R.id.eventEndDate)).getText();
-                Time startTime = (Time) ((TextView) findViewById(R.id.eventStartTime)).getText();
-                Time endTime = (Time) ((TextView) findViewById(R.id.eventEndTime)).getText();
+                String s = (((TextView) findViewById(R.id.eventStartDate)).getText().toString());
+                SimpleDateFormat d = new SimpleDateFormat("MM/dd/yyyy");
+                Date startDate = new Date();
+                try{
+                    startDate = d.parse(s);
+                    Log.d("mDebug","patlamadi ya la");
+                }catch(ParseException e){
+                    Log.d("mDebug","patliyor aq:"+s);
+                }
+                String t = (((TextView) findViewById(R.id.eventEndDate)).getText().toString());
+                Date endDate = new Date();
+                try{
+                    endDate = d.parse(t);
+                    Log.d("mDebug","patlamadi ya la");
+                }catch(ParseException e){
+                    Log.d("mDebug","patliyor aq:"+s);
+                }
                 String location = ((TextView) findViewById(R.id.eventLocation)).getText().toString();
                 String description = ((TextView) findViewById(R.id.eventDescription)).getText().toString();
-                int numberOfPeopleAllowed = Integer.parseInt(((TextView) findViewById(R.id.eventNumberOfPeopleAllowed)).getText().toString());
-               // CaulisEvent newEvent = new CaulisEvent(name, startDate, endDate, startTime, endTime, location, description, numberOfPeopleAllowed);
+                long timeInMillis = startDate.getTime();
 
+                try{
+                    Intent intent = new Intent(EventActivity.this, CalendarActivity2.class);
+                    intent.putExtra("Name", name);
+                    intent.putExtra("StartDate", startDate);
+                    intent.putExtra("EndDate", endDate);
+                    intent.putExtra("Location", location);
+                    intent.putExtra("Description", description);
+                    intent.putExtra("TimeInMillis", timeInMillis);
+                    startActivity(intent);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
 
-                ContentResolver cr = this.getContentResolver();
-                ContentValues cv = new ContentValues();
-                cv.put(CalendarContract.Events.TITLE, name);
-                cv.put(CalendarContract.Events.DESCRIPTION, description);
-                cv.put(CalendarContract.Events.EVENT_LOCATION, location);
-                long date = startDate.getTime();
-                cv.put(CalendarContract.Events.DTSTART, date);
-                long dateFinal = endDate.getTime();
-                cv.put(CalendarContract.Events.DTEND, dateFinal);
-                cv.put(CalendarContract.Events.EVENT_TIMEZONE, Calendar.getInstance().getTimeZone().getID());
-                cv.put(CalendarContract.Events.CALENDAR_ID,1);
-                Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI,cv);
-
-                Toast.makeText(this, "Event is sucessfully added.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Event is sucessfully added.", Toast.LENGTH_SHORT).show();
 
                 /*
                 long startTimes = cal.getTimeInMillis();
@@ -131,7 +148,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.goBackToCalendarButton:
                 try {
-                    Intent intent2 = new Intent(EventActivity.this, CalendarActivity.class);
+                    Intent intent2 = new Intent(EventActivity.this, CalendarActivity2.class);
                     startActivity(intent2);
                 } catch(Exception e) {
                     e.printStackTrace();

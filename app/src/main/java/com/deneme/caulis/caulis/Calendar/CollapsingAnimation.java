@@ -1,21 +1,21 @@
 package com.deneme.caulis.caulis.Calendar;
 
+
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
 import com.deneme.caulis.caulis.classes.CaulisCalendar;
 
-public class CollapsingAnimation extends Animation {
-
+class CollapsingAnimation extends Animation {
     private final int targetHeight;
     private final CalendarView view;
     private int targetGrowRadius;
     private final boolean down;
-    private CaulisCalendar calendarContainer;
+    private CaulisCalendar compactCalendarController;
 
-    public CollapsingAnimation(CalendarView view, CaulisCalendar calendarContainer, int targetHeight, int targetGrowRadius, boolean down) {
+    public CollapsingAnimation(CalendarView view, CaulisCalendar compactCalendarController, int targetHeight, int targetGrowRadius, boolean down) {
         this.view = view;
-        this.calendarContainer = calendarContainer;
+        this.compactCalendarController = compactCalendarController;
         this.targetHeight = targetHeight;
         this.targetGrowRadius = targetGrowRadius;
         this.down = down;
@@ -33,7 +33,7 @@ public class CollapsingAnimation extends Animation {
             newHeight = (int) (targetHeight * progress);
             grow = (progress * (targetGrowRadius * 2));
         }
-        calendarContainer.setGrowProgress(grow);
+        compactCalendarController.setGrowProgress(grow);
         view.getLayoutParams().height = newHeight;
         view.requestLayout();
 
@@ -49,5 +49,4 @@ public class CollapsingAnimation extends Animation {
     public boolean willChangeBounds() {
         return true;
     }
-
 }

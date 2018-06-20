@@ -18,11 +18,11 @@ public class ViewTabAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            CalendarTab calendarTab = new CalendarTab();
-            return calendarTab;
+            CalendarTab compactCalendarTab = new CalendarTab();
+            return compactCalendarTab;
         } else {
-            EventTab eventTab = new EventTab();
-            return eventTab;
+            EventTab tab2 = new EventTab();
+            return tab2;
         }
     }
 

@@ -14,9 +14,11 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
+import android.view.ViewConfiguration;
 import android.widget.OverScroller;
 
 import com.deneme.caulis.caulis.Calendar.CalendarView;
@@ -24,7 +26,6 @@ import com.deneme.caulis.caulis.Calendar.Event;
 import com.deneme.caulis.caulis.Calendar.Events;
 import com.deneme.caulis.caulis.Calendar.Week;
 import com.deneme.caulis.caulis.R;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,40 +36,9 @@ import static com.deneme.caulis.caulis.Calendar.CalendarView.FILL_LARGE_INDICATO
 import static com.deneme.caulis.caulis.Calendar.CalendarView.NO_FILL_LARGE_INDICATOR;
 import static com.deneme.caulis.caulis.Calendar.CalendarView.SMALL_INDICATOR;
 
+
 public class CaulisCalendar {
 
-
-    private TimeZone timeZone;
-    private Locale locale;
-    private Calendar currentCalendar;
-    private Calendar todaycalendar;
-    private Calendar calendarWithFirstDayOfMonth;
-    private Calendar eventsCalendar;
-    private CaulisEvent eventsContainer;
-    private CalendarView.CalendarViewListener listener;
-
-    private int eventIndicatorStyle = SMALL_INDICATOR;
-    private int currentDayIndicatorStyle = FILL_LARGE_INDICATOR;
-    private int currentSelectedDayIndicatorStyle = FILL_LARGE_INDICATOR;
-
-    private int targetHeight;
-    private int width;
-    private int textSize = 30;
-    private boolean shouldSelectFirstDayOfMonthOnScroll = true;
-
-    //Colors
-    private int calendarBackgroundColor = Color.WHITE;
-    private int textColor;
-    private int currentSelectedDayBackgroundColor;
-    private int currentDayBackgroundColor;
-    private int otherMonthDaysTextColor;
-    private int calendarTextColor;
-    private int currentDayTextColor;
-    private int currentSelectedDayTextColor;
-
-
-
-    //TO CHECK
     public static final int IDLE = 0;
     public static final int EXPOSE_CALENDAR_ANIMATION = 1;
     public static final int EXPAND_COLLAPSE_CALENDAR = 2;
@@ -79,6 +49,9 @@ public class CaulisCalendar {
     private static final float SNAP_VELOCITY_DIP_PER_SECOND = 400;
     private static final float ANIMATION_SCREEN_SET_DURATION_MILLIS = 700;
 
+    private int eventIndicatorStyle = SMALL_INDICATOR;
+    private int currentDayIndicatorStyle = FILL_LARGE_INDICATOR;
+    private int currentSelectedDayIndicatorStyle = FILL_LARGE_INDICATOR;
     private int paddingWidth = 40;
     private int paddingHeight = 40;
     private int textHeight;
@@ -86,12 +59,15 @@ public class CaulisCalendar {
     private int widthPerDay;
     private int monthsScrolledSoFar;
     private int heightPerDay;
+    private int textSize = 30;
+    private int width;
     private int height;
     private int paddingRight;
     private int paddingLeft;
     private int maximumVelocity;
     private int densityAdjustedSnapVelocity;
     private int distanceThresholdForAutoScroll;
+    private int targetHeight;
     private int animationStatus = 0;
     private int firstDayOfWeekToDraw = Calendar.MONDAY;
     private float xIndicatorOffset;
@@ -110,12 +86,18 @@ public class CaulisCalendar {
     private boolean shouldDrawDaysHeader = true;
     private boolean shouldDrawIndicatorsBelowSelectedDays = false;
     private boolean displayOtherMonthDays = false;
+    private boolean shouldSelectFirstDayOfMonthOnScroll = true;
 
+    private CalendarView.CalendarViewListener listener;
     private VelocityTracker velocityTracker = null;
     private Direction currentDirection = Direction.NONE;
     private Date currentDate = new Date();
+    private Locale locale;
     private Calendar currentCalender;
     private Calendar todayCalender;
+    private Calendar calendarWithFirstDayOfMonth;
+    private Calendar eventsCalendar;
+    private CaulisEvent eventsContainer;
     private PointF accumulatedScrollOffset = new PointF();
     private OverScroller scroller;
     private Paint dayPaint = new Paint();
@@ -125,40 +107,58 @@ public class CaulisCalendar {
 
     // colors
     private int multiEventIndicatorColor;
+    private int currentDayBackgroundColor;
+    private int currentDayTextColor;
     private int calenderTextColor;
+    private int currentSelectedDayBackgroundColor;
+    private int currentSelectedDayTextColor;
     private int calenderBackgroundColor = Color.WHITE;
+    private int otherMonthDaysTextColor;
+    private TimeZone timeZone;
 
     /**
      * Only used in onDrawCurrentMonth to temporarily calculate previous month days
      */
     private Calendar tempPreviousMonthCalendar;
 
-
     private enum Direction {
         NONE, HORIZONTAL, VERTICAL
     }
 
-
-    public CaulisCalendar(AttributeSet attrs, Context context, CaulisEvent eventsContainer, Locale locale, TimeZone timeZone) {
+    public CaulisCalendar(Paint dayPaint, OverScroller scroller, Rect textSizeRect, AttributeSet attrs,
+                   Context context, int currentDayBackgroundColor, int calenderTextColor,
+                   int currentSelectedDayBackgroundColor, VelocityTracker velocityTracker,
+                   int multiEventIndicatorColor, CaulisEvent eventsContainer,
+                   Locale locale, TimeZone timeZone) {
+        this.dayPaint = dayPaint;
+        this.scroller = scroller;
+        this.textSizeRect = textSizeRect;
+        this.currentDayBackgroundColor = currentDayBackgroundColor;
+        this.calenderTextColor = calenderTextColor;
+        this.currentSelectedDayBackgroundColor = currentSelectedDayBackgroundColor;
+        this.otherMonthDaysTextColor = calenderTextColor;
+        this.velocityTracker = velocityTracker;
+        this.multiEventIndicatorColor = multiEventIndicatorColor;
         this.eventsContainer = eventsContainer;
         this.locale = locale;
         this.timeZone = timeZone;
+        this.displayOtherMonthDays = false;
         loadAttributes(attrs, context);
         init(context);
     }
 
-
     private void loadAttributes(AttributeSet attrs, Context context) {
         if (attrs != null && context != null) {
-            TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs,R.styleable.calendarView, 0, 0);
+            TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.calendarView, 0, 0);
             try {
                 currentDayBackgroundColor = typedArray.getColor(R.styleable.calendarView_calendarCurrentDayBackgroundColor, currentDayBackgroundColor);
-                calendarTextColor = typedArray.getColor(R.styleable.calendarView_calendarTextColor, calendarTextColor);
-                currentDayTextColor = typedArray.getColor(R.styleable.calendarView_calendarCurrentDayTextColor, calendarTextColor);
+                calenderTextColor = typedArray.getColor(R.styleable.calendarView_calendarTextColor, calenderTextColor);
+                currentDayTextColor = typedArray.getColor(R.styleable.calendarView_calendarCurrentDayTextColor, calenderTextColor);
                 otherMonthDaysTextColor = typedArray.getColor(R.styleable.calendarView_calendarOtherMonthDaysTextColor, otherMonthDaysTextColor);
                 currentSelectedDayBackgroundColor = typedArray.getColor(R.styleable.calendarView_calendarCurrentSelectedDayBackgroundColor, currentSelectedDayBackgroundColor);
-                currentSelectedDayTextColor = typedArray.getColor(R.styleable.calendarView_calendarCurrentSelectedDayTextColor, calendarTextColor);
-                calendarBackgroundColor = typedArray.getColor(R.styleable.calendarView_calendarBackgroundColor, calendarBackgroundColor);
+                currentSelectedDayTextColor = typedArray.getColor(R.styleable.calendarView_calendarCurrentSelectedDayTextColor, calenderTextColor);
+                calenderBackgroundColor = typedArray.getColor(R.styleable.calendarView_calendarBackgroundColor, calenderBackgroundColor);
+                multiEventIndicatorColor = typedArray.getColor(R.styleable.calendarView_calendarMultiEventIndicatorColor, multiEventIndicatorColor);
                 textSize = typedArray.getDimensionPixelSize(R.styleable.calendarView_calendarTextSize,
                         (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, textSize, context.getResources().getDisplayMetrics()));
                 targetHeight = typedArray.getDimensionPixelSize(R.styleable.calendarView_calendarTargetHeight,
@@ -166,6 +166,7 @@ public class CaulisCalendar {
                 eventIndicatorStyle = typedArray.getInt(R.styleable.calendarView_calendarEventIndicatorStyle, SMALL_INDICATOR);
                 currentDayIndicatorStyle = typedArray.getInt(R.styleable.calendarView_calendarCurrentDayIndicatorStyle, FILL_LARGE_INDICATOR);
                 currentSelectedDayIndicatorStyle = typedArray.getInt(R.styleable.calendarView_calendarCurrentSelectedDayIndicatorStyle, FILL_LARGE_INDICATOR);
+                displayOtherMonthDays = typedArray.getBoolean(R.styleable.calendarView_calendarDisplayOtherMonthDays, displayOtherMonthDays);
                 shouldSelectFirstDayOfMonthOnScroll = typedArray.getBoolean(R.styleable.calendarView_calendarShouldSelectFirstDayOfMonthOnScroll, shouldSelectFirstDayOfMonthOnScroll);
             } finally {
                 typedArray.recycle();
@@ -173,43 +174,64 @@ public class CaulisCalendar {
         }
     }
 
-
     private void init(Context context) {
-        currentCalendar = Calendar.getInstance(timeZone, locale);
-        todaycalendar = Calendar.getInstance(timeZone, locale);
+        currentCalender = Calendar.getInstance(timeZone, locale);
+        todayCalender = Calendar.getInstance(timeZone, locale);
         calendarWithFirstDayOfMonth = Calendar.getInstance(timeZone, locale);
         eventsCalendar = Calendar.getInstance(timeZone, locale);
+        tempPreviousMonthCalendar = Calendar.getInstance(timeZone, locale);
 
         // make setMinimalDaysInFirstWeek same across android versions
         eventsCalendar.setMinimalDaysInFirstWeek(1);
         calendarWithFirstDayOfMonth.setMinimalDaysInFirstWeek(1);
-        todaycalendar.setMinimalDaysInFirstWeek(1);
-        currentCalendar.setMinimalDaysInFirstWeek(1);
-        todaycalendar.setTime(new Date());
-        setToMidnight(todaycalendar);
-        currentCalendar.setTime(currentDate);
-        setCalendarToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, 0);
+        todayCalender.setMinimalDaysInFirstWeek(1);
+        currentCalender.setMinimalDaysInFirstWeek(1);
+        tempPreviousMonthCalendar.setMinimalDaysInFirstWeek(1);
+
+        setFirstDayOfWeek(firstDayOfWeekToDraw);
+
+        setUseWeekDayAbbreviation(false);
+        dayPaint.setTextAlign(Paint.Align.CENTER);
+        dayPaint.setStyle(Paint.Style.STROKE);
+        dayPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        dayPaint.setTypeface(Typeface.SANS_SERIF);
+        dayPaint.setTextSize(textSize);
+        dayPaint.setColor(calenderTextColor);
+        dayPaint.getTextBounds("31", 0, "31".length(), textSizeRect);
+        textHeight = textSizeRect.height() * 3;
+        textWidth = textSizeRect.width() * 2;
+
+        todayCalender.setTime(new Date());
+        setToMidnight(todayCalender);
+
+        currentCalender.setTime(currentDate);
+        setCalenderToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, 0);
+
+        initScreenDensityRelatedValues(context);
+
+        xIndicatorOffset = 3.5f * screenDensity;
+
+        //scale small indicator by screen density
+        smallIndicatorRadius = 2.5f * screenDensity;
+
+        //just set a default growFactor to draw full calendar when initialised
+        growFactor = Integer.MAX_VALUE;
     }
 
-    public void setListener(CalendarView.CalendarViewListener listener) {this.listener = listener;}
+    private void initScreenDensityRelatedValues(Context context) {
+        if (context != null) {
+            screenDensity = context.getResources().getDisplayMetrics().density;
+            final ViewConfiguration configuration = ViewConfiguration
+                    .get(context);
+            densityAdjustedSnapVelocity = (int) (screenDensity * SNAP_VELOCITY_DIP_PER_SECOND);
+            maximumVelocity = configuration.getScaledMaximumFlingVelocity();
 
-    public int getTargetHeight() {return targetHeight;}
-    public void setTargetHeight(int targetHeight) {this.targetHeight = targetHeight;}
+            final DisplayMetrics dm = context.getResources().getDisplayMetrics() ;
+            multiDayIndicatorStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, dm);
+        }
+    }
 
-    public int getWidth(){return width;}
-
-    public void setWidth(int width) {this.width = width;}
-
-    public void addEvent(Event event) {eventsContainer.addEvent(event);}
-
-    public void addEvents(List<Event> events) {eventsContainer.addEvents(events);}
-
-    public List<Event> getCalendarEventsFor(long epochMillis) {return eventsContainer.getEventsFor(epochMillis);}
-
-    public List<Event> getCalendarEventsForMonth(long epochMillis) {return eventsContainer.getEventsForMonth(epochMillis);}
-
-
-    private void setCalendarToFirstDayOfMonth(Calendar calendarWithFirstDayOfMonth, Date currentDate, int scrollOffset, int monthOffset) {
+    private void setCalenderToFirstDayOfMonth(Calendar calendarWithFirstDayOfMonth, Date currentDate, int scrollOffset, int monthOffset) {
         setMonthOffset(calendarWithFirstDayOfMonth, currentDate, scrollOffset, monthOffset);
         calendarWithFirstDayOfMonth.set(Calendar.DAY_OF_MONTH, 1);
     }
@@ -226,7 +248,6 @@ public class CaulisCalendar {
     public void setShouldSelectFirstDayOfMonthOnScroll(boolean shouldSelectFirstDayOfMonthOnScroll){
         this.shouldSelectFirstDayOfMonthOnScroll = shouldSelectFirstDayOfMonthOnScroll;
     }
-
 
     public void setDisplayOtherMonthDays(boolean displayOtherMonthDays) {
         this.displayOtherMonthDays = displayOtherMonthDays;
@@ -248,6 +269,10 @@ public class CaulisCalendar {
         this.currentSelectedDayIndicatorStyle = currentSelectedDayIndicatorStyle;
     }
 
+    public void setTargetHeight(int targetHeight) {
+        this.targetHeight = targetHeight;
+    }
+
     public float getScreenDensity(){
         return screenDensity;
     }
@@ -266,6 +291,22 @@ public class CaulisCalendar {
 
     public void setAnimationStatus(int animationStatus) {
         this.animationStatus = animationStatus;
+    }
+
+    public int getTargetHeight() {
+        return targetHeight;
+    }
+
+    public int getWidth(){
+        return width;
+    }
+
+    public void setListener(CalendarView.CalendarViewListener listener) {
+        this.listener = listener;
+    }
+
+    public void removeAllEvents() {
+        eventsContainer.removeAllEvents();
     }
 
     public void setFirstDayOfWeek(int day){
@@ -289,10 +330,9 @@ public class CaulisCalendar {
         this.currentSelectedDayTextColor = currentSelectedDayTextColor;
     }
 
-    public void setCalendarBackgroundColor(int calenderBackgroundColor) {
+    public void setCalenderBackgroundColor(int calenderBackgroundColor) {
         this.calenderBackgroundColor = calenderBackgroundColor;
     }
-
 
     public void setCurrentDayBackgroundColor(int currentDayBackgroundColor) {
         this.currentDayBackgroundColor = currentDayBackgroundColor;
@@ -306,7 +346,7 @@ public class CaulisCalendar {
         monthsScrolledSoFar = monthsScrolledSoFar - 1;
         accumulatedScrollOffset.x = monthsScrolledSoFar * width;
         if(shouldSelectFirstDayOfMonthOnScroll){
-            setCalendarToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentCalender.getTime(), 0, 1);
+            setCalenderToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentCalender.getTime(), 0, 1);
             setCurrentDate(calendarWithFirstDayOfMonth.getTime());
         }
         performMonthScrollCallback();
@@ -316,7 +356,7 @@ public class CaulisCalendar {
         monthsScrolledSoFar = monthsScrolledSoFar + 1;
         accumulatedScrollOffset.x = monthsScrolledSoFar * width;
         if(shouldSelectFirstDayOfMonthOnScroll){
-            setCalendarToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentCalender.getTime(), 0, -1);
+            setCalenderToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentCalender.getTime(), 0, -1);
             setCurrentDate(calendarWithFirstDayOfMonth.getTime());
         }
         performMonthScrollCallback();
@@ -423,7 +463,7 @@ public class CaulisCalendar {
         int dayColumn = Math.round((paddingLeft + e.getX() - paddingWidth - paddingRight) / widthPerDay);
         int dayRow = Math.round((e.getY() - paddingHeight) / heightPerDay);
 
-        setCalendarToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, 0);
+        setCalenderToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, 0);
 
         int firstDayOfMonth = getDayOfWeek(calendarWithFirstDayOfMonth);
 
@@ -509,10 +549,10 @@ public class CaulisCalendar {
         handleSmoothScrolling(velocityX);
 
         currentDirection = Direction.NONE;
-        setCalendarToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, 0);
+        setCalenderToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, 0);
 
         if (calendarWithFirstDayOfMonth.get(Calendar.MONTH) != currentCalender.get(Calendar.MONTH) && shouldSelectFirstDayOfMonthOnScroll) {
-            setCalendarToFirstDayOfMonth(currentCalender, currentDate, -monthsScrolledSoFar, 0);
+            setCalenderToFirstDayOfMonth(currentCalender, currentDate, -monthsScrolledSoFar, 0);
         }
     }
 
@@ -604,6 +644,38 @@ public class CaulisCalendar {
         calendar.set(Calendar.MILLISECOND, 0);
     }
 
+    public void addEvent(Event event) {
+        eventsContainer.addEvent(event);
+    }
+
+    public void addEvents(List<Event> events) {
+        eventsContainer.addEvents(events);
+    }
+
+    public List<Event> getCalendarEventsFor(long epochMillis) {
+        return eventsContainer.getEventsFor(epochMillis);
+    }
+
+    public List<Event> getCalendarEventsForMonth(long epochMillis) {
+        return eventsContainer.getEventsForMonth(epochMillis);
+    }
+
+    public List<Event> getAllEvents(){
+        return eventsContainer.getAllEvents();
+    }
+
+    public void removeEventsFor(long epochMillis) {
+        eventsContainer.removeEventByEpochMillis(epochMillis);
+    }
+
+    public void removeEvent(Event event) {
+        eventsContainer.removeEvent(event);
+    }
+
+    public void removeEvents(List<Event> events) {
+        eventsContainer.removeEvents(events);
+    }
+
     public void setGrowProgress(float grow) {
         growFactor = grow;
     }
@@ -639,17 +711,17 @@ public class CaulisCalendar {
     }
 
     private void drawNextMonth(Canvas canvas) {
-        setCalendarToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, 1);
+        setCalenderToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, 1);
         drawMonth(canvas, calendarWithFirstDayOfMonth, (width * (-monthsScrolledSoFar + 1)));
     }
 
     private void drawCurrentMonth(Canvas canvas) {
-        setCalendarToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, 0);
+        setCalenderToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, 0);
         drawMonth(canvas, calendarWithFirstDayOfMonth, width * -monthsScrolledSoFar);
     }
 
     private void drawPreviousMonth(Canvas canvas) {
-        setCalendarToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, -1);
+        setCalenderToFirstDayOfMonth(calendarWithFirstDayOfMonth, currentDate, -monthsScrolledSoFar, -1);
         drawMonth(canvas, calendarWithFirstDayOfMonth, (width * (-monthsScrolledSoFar - 1)));
     }
 
@@ -782,7 +854,7 @@ public class CaulisCalendar {
 
         boolean isSameMonthAsToday = monthToDrawCalender.get(Calendar.MONTH) == todayCalender.get(Calendar.MONTH);
         boolean isSameYearAsToday = monthToDrawCalender.get(Calendar.YEAR) == todayCalender.get(Calendar.YEAR);
-        boolean isSameMonthAscurrentCalendar = monthToDrawCalender.get(Calendar.MONTH) == currentCalender.get(Calendar.MONTH) &&
+        boolean isSameMonthAsCurrentCalendar = monthToDrawCalender.get(Calendar.MONTH) == currentCalender.get(Calendar.MONTH) &&
                 monthToDrawCalender.get(Calendar.YEAR) == currentCalender.get(Calendar.YEAR);
         int todayDayOfMonth = todayCalender.get(Calendar.DAY_OF_MONTH);
         boolean isAnimatingWithExpose = animationStatus == EXPOSE_CALENDAR_ANIMATION;
@@ -822,7 +894,7 @@ public class CaulisCalendar {
             } else {
                 int day = ((dayRow - 1) * 7 + dayColumn + 1) - firstDayOfMonth;
                 int defaultCalenderTextColorToUse = calenderTextColor;
-                if (currentCalender.get(Calendar.DAY_OF_MONTH) == day && isSameMonthAscurrentCalendar && !isAnimatingWithExpose) {
+                if (currentCalender.get(Calendar.DAY_OF_MONTH) == day && isSameMonthAsCurrentCalendar && !isAnimatingWithExpose) {
                     drawDayCircleIndicator(currentSelectedDayIndicatorStyle, canvas, xPosition, yPosition, currentSelectedDayBackgroundColor);
                     defaultCalenderTextColorToUse = currentSelectedDayTextColor;
                 } else if (isSameYearAsToday && isSameMonthAsToday && todayDayOfMonth == day && !isAnimatingWithExpose) {
@@ -897,5 +969,4 @@ public class CaulisCalendar {
     private void drawCircle(Canvas canvas, float radius, float x, float y) {
         canvas.drawCircle(x, y, radius, dayPaint);
     }
-
 }

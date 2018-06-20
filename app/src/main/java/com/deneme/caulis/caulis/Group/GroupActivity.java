@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.deneme.caulis.caulis.Calendar.CalendarActivity;
+import com.deneme.caulis.caulis.Calendar.CalendarActivity2;
 import com.deneme.caulis.caulis.R;
 
 
@@ -39,7 +40,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.goBackButton:
                 try {
-                    Intent intent = new Intent(GroupActivity.this, CalendarActivity.class);
+                    Intent intent = new Intent(GroupActivity.this, CalendarActivity2.class);
                     startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
