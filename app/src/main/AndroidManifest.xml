@@ -20,6 +20,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".DenemeActivity" />
+        <activity android:name=".Group.GroupChatActivity"/>
+        <activity android:name=".Group.GroupPageActivity"/>
+        <activity android:name=".SignInActivity"/>
         <activity android:name=".Calendar.CalendarActivity" />
         <activity android:name=".Calendar.EventActivity" />
         <activity android:name=".Calendar.DayActivity" />

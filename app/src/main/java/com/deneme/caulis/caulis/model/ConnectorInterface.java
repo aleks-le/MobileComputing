@@ -20,9 +20,11 @@ public interface ConnectorInterface {
 
     User login(String login, String password, final Activity activity);
 
+    void createUser(User user);
+
     boolean register(String login, String password, final Activity activity);
 
-    void sendMessage(CaulisMessage message);
+    void sendMessage(CaulisMessage message, String groupID);
 
     void createGroup(CaulisGroup group);
 
@@ -31,6 +33,7 @@ public interface ConnectorInterface {
     void setMessageListener(final CaulisList list, String groupID);
 
     void setGroupListener(final CaulisList list);
+
 
 
 

@@ -6,6 +6,7 @@ package com.deneme.caulis.caulis;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,12 +25,12 @@ public class MainPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        myProfileButton = findViewById(R.id.MainPage_ProfileButton);
+        myProfileButton =(Button) findViewById(R.id.MainPage_ProfileButton);
         myProfileButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 // startActivity(new Intent(MainPageActivity.this, MyProfileActivity.class));
-
+                Log.d("deneme","bilmem denesem mi denemesem mi?");
                 /*try {
                     Intent intent = new Intent(MainPageActivity.this, MyProfileActivity.class);
                     startActivity(intent);
@@ -55,6 +56,7 @@ public class MainPageActivity extends AppCompatActivity {
             }
         });
 
+        /*
         logoutButton = findViewById(R.id.MainPage_LogoutButton);
         logoutButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -69,6 +71,7 @@ public class MainPageActivity extends AppCompatActivity {
                 }
             }
         });
+        */
 
 
 

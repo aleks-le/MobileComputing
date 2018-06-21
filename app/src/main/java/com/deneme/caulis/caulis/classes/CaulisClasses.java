@@ -1,4 +1,6 @@
 package com.deneme.caulis.caulis.classes;
 
-public interface CaulisClasses {
+import java.io.Serializable;
+
+public interface CaulisClasses extends Serializable {
 }

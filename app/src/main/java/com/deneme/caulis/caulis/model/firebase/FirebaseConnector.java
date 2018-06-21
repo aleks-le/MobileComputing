@@ -2,11 +2,14 @@ package com.deneme.caulis.caulis.model.firebase;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.deneme.caulis.caulis.DenemeActivity;
+import com.deneme.caulis.caulis.MainActivity;
 import com.deneme.caulis.caulis.R;
 import com.deneme.caulis.caulis.classes.CaulisEvent;
 import com.deneme.caulis.caulis.classes.CaulisGroup;
@@ -87,11 +90,13 @@ public class FirebaseConnector implements ConnectorInterface {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("SignIn", "signInWithEmail:success");
                     FirebaseUser user = mAuth.getCurrentUser();
-                    User u = new User(user.getEmail(), password);/**denenmedi*/
+                    User u = new User(user.getEmail(), password);
+                    //TODO: düzenlenecek user bilgilerini çek netten amg
                     if (activity instanceof LoginCallback) {
                         ((LoginCallback) activity).userLoggedIn(u);
                     }
                     Log.d("Connector", "Login successful.");
+
                     //updating user data
                 }else{
                     // If sign in fails, display a message to the user.
@@ -144,9 +149,9 @@ public class FirebaseConnector implements ConnectorInterface {
     }
 
     @Override
-    public void sendMessage(CaulisMessage message) {
+    public void sendMessage(CaulisMessage message, String groupID) {
         message.setMessageID(randomString());
-        mDatabase.child("messages").child("groups").child("1").child("groupMessages").child(message.getMessageTime()+"::"+message.getMessageID()).setValue(message);
+        mDatabase.child("messages").child("groups").child(groupID).child("groupMessages").child(message.getMessageTimeAsString()+"::"+message.getMessageID()).setValue(message);
     }
 
     @Override
@@ -158,6 +163,12 @@ public class FirebaseConnector implements ConnectorInterface {
     @Override
     public void createEvent(CaulisEvent event) {
 
+    }
+
+    @Override
+    public void createUser(User user) {
+        user.setUserID(randomString());
+        mDatabase.child("users").child(user.getUserMailValidFormat()).setValue(user);
     }
 
 
@@ -207,11 +218,10 @@ public class FirebaseConnector implements ConnectorInterface {
                     JSONObject o = null;
                     CaulisGroup g = null;
                     try {
-                        Log.d("deneme","group key:"+ds.getKey());
-                        Log.d("deneme","group info:"+ds.getValue().toString());
+                        Log.d("GrupDeneme","group key:"+ds.getKey()+"group"+ds.getValue().toString());
                         o = new JSONObject(ds.getValue().toString());
-                        Log.d("deneme","group:"+o);
-                        //g = new CaulisMessage(o);
+                        JSONObject object = o.getJSONObject("groupInfo");
+                        g = new CaulisGroup(object);
 
                     } catch (JSONException e) {
                         Log.d("MyDebug","Error occured in FirebaseConnector.java getGroupListener method inner try/catch");
@@ -219,8 +229,8 @@ public class FirebaseConnector implements ConnectorInterface {
                         e.printStackTrace();
                     }
                     if (g != null){
-                        Log.d("deneme","group:"+o);
-                        //list.gadd(g);
+                        Log.d("GrupDeneme","group:"+o);
+                        list.gadd(g);
                     }
                 }
             }
@@ -231,6 +241,6 @@ public class FirebaseConnector implements ConnectorInterface {
             }
         };
         userRef.addListenerForSingleValueEvent(eventListener);
-        userRef.addValueEventListener(eventListener);
+        //userRef.addValueEventListener(eventListener);
     }
 }

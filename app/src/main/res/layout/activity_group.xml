@@ -7,7 +7,7 @@
     tools:context=".Group.GroupActivity">
 
     <EditText
-        android:id="@+id/groupPeopleNumber"
+        android:id="@+id/groupActivity_groupPeopleNumber"
         android:layout_width="wrap_content"
         android:layout_height="41dp"
         android:layout_marginEnd="16dp"
@@ -15,20 +15,20 @@
         android:ems="10"
         android:inputType="textShortMessage"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupDescription" />
+        app:layout_constraintTop_toBottomOf="@+id/groupActivity_description" />
 
     <TextView
-        android:id="@+id/peopleNumber"
+        android:id="@+id/groupActivity_peopleNumber"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Number of people allowed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        app:layout_constraintTop_toBottomOf="@+id/groupActivity_description" />
 
     <EditText
-        android:id="@+id/groupName"
+        android:id="@+id/groupActivity_groupName"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/groupDescription"
+        android:id="@+id/groupActivity_groupDescription"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"
@@ -47,10 +47,10 @@
         android:ems="10"
         android:inputType="textShortMessage"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupName" />
+        app:layout_constraintTop_toBottomOf="@+id/groupActivity_groupName" />
 
     <TextView
-        android:id="@+id/vorname"
+        android:id="@+id/groupActivity_vorname"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
@@ -60,28 +60,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/description"
+        android:id="@+id/groupActivity_description"
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Description"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vorname" />
-
-    <SearchView
-        android:id="@+id/groupFindMember"
-        android:layout_width="360dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/findMember" />
+        app:layout_constraintTop_toBottomOf="@+id/groupActivity_vorname" />
 
     <TextView
-        android:id="@+id/findMember"
+        android:id="@+id/groupActivity_findMember"
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:layout_marginEnd="16dp"
@@ -91,10 +80,10 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupPeopleNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/groupActivity_groupPeopleNumber" />
 
     <Button
-        android:id="@+id/saveGroupButton"
+        android:id="@+id/groupActivity_saveGroupButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -102,11 +91,11 @@
         android:layout_marginStart="8dp"
         android:text="create the group"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/goBackButton"
+        app:layout_constraintEnd_toStartOf="@+id/groupActivity_goBackButton"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/goBackButton"
+        android:id="@+id/groupActivity_goBackButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

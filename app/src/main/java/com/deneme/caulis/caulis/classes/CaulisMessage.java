@@ -52,6 +52,10 @@ public class CaulisMessage implements CaulisClasses {
         return messageTime;
     }
 
+    public String getMessageTimeAsString(){
+        return String.valueOf("m"+messageTime);
+    }
+
     public String getMessageID() {
         return messageID;
     }
