@@ -22,9 +22,9 @@ import android.view.ViewConfiguration;
 import android.widget.OverScroller;
 
 import com.deneme.caulis.caulis.Calendar.CalendarView;
-import com.deneme.caulis.caulis.Calendar.Event;
-import com.deneme.caulis.caulis.Calendar.Events;
-import com.deneme.caulis.caulis.Calendar.Week;
+import com.deneme.caulis.caulis.Calendar.Event.Event;
+import com.deneme.caulis.caulis.Calendar.Event.Events;
+import com.deneme.caulis.caulis.Calendar.Tab.Week;
 import com.deneme.caulis.caulis.R;
 import java.util.Calendar;
 import java.util.Date;

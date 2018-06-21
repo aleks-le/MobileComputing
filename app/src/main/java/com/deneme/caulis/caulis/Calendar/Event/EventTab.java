@@ -1,21 +1,20 @@
-package com.deneme.caulis.caulis.Calendar;
+package com.deneme.caulis.caulis.Calendar.Event;
 
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.deneme.caulis.caulis.Calendar.CalendarActivity2;
 import com.deneme.caulis.caulis.R;
 import com.deneme.caulis.caulis.classes.CaulisEvent;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -24,8 +23,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import static android.content.ContentValues.TAG;
 
 public class EventTab extends Fragment {
 

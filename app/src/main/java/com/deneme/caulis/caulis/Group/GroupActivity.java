@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.deneme.caulis.caulis.Calendar.CalendarActivity;
 import com.deneme.caulis.caulis.Calendar.CalendarActivity2;
 import com.deneme.caulis.caulis.R;
 import com.deneme.caulis.caulis.classes.CaulisGroup;
@@ -40,7 +39,7 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    Intent intent = new Intent(GroupActivity.this, CalendarActivity2.class);
+                    Intent intent = new Intent(GroupActivity.this, GroupPageActivity.class);
                     startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();

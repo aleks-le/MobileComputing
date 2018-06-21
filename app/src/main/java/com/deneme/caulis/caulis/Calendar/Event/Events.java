@@ -4,10 +4,9 @@
  **************************************************************************************************/
 
 
-package com.deneme.caulis.caulis.Calendar;
+package com.deneme.caulis.caulis.Calendar.Event;
 
 import java.util.List;
-import com.deneme.caulis.caulis.Calendar.Event;
 
 public class Events {
 

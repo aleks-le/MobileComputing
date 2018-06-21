@@ -1,11 +1,9 @@
 package com.deneme.caulis.caulis.Calendar;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -20,7 +18,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.deneme.caulis.caulis.Calendar.Event.Event;
+import com.deneme.caulis.caulis.Calendar.Event.EventActivity;
 import com.deneme.caulis.caulis.Group.GroupActivity;
+import com.deneme.caulis.caulis.Group.GroupPageActivity;
 import com.deneme.caulis.caulis.R;
 
 import java.text.SimpleDateFormat;
@@ -31,7 +32,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public class CalendarTab extends Fragment {
 
@@ -164,7 +164,7 @@ public class CalendarTab extends Fragment {
             @Override
             public void onClick(View view) {
                 try {
-                    Intent intent = new Intent(getActivity(), GroupActivity.class);
+                    Intent intent = new Intent(getActivity(), GroupPageActivity.class);
                     startActivity(intent);
                 } catch(Exception e){
                     e.printStackTrace();

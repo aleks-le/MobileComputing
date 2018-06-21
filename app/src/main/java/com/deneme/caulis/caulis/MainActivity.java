@@ -8,11 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.deneme.caulis.caulis.Calendar.CalendarActivity;
 import com.deneme.caulis.caulis.Calendar.CalendarActivity2;
-import com.deneme.caulis.caulis.Calendar.CalendarTab;
-import com.deneme.caulis.caulis.Calendar.EventActivity;
-import com.deneme.caulis.caulis.Group.GroupActivity;
 import com.deneme.caulis.caulis.model.ConnectorInterface;
 import com.deneme.caulis.caulis.model.User;
 import com.deneme.caulis.caulis.model.firebase.FirebaseConnector;
@@ -55,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements ConnectorInterfac
             }
         });
 
-        Button denemeButton = (Button) findViewById(R.id.denemeButton);
+        /*Button denemeButton = (Button) findViewById(R.id.denemeButton);
         denemeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,10 +62,10 @@ public class MainActivity extends AppCompatActivity implements ConnectorInterfac
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
 
 
-        Button calendarButton = (Button) findViewById(R.id.calendarButton);
+       /* Button calendarButton = (Button) findViewById(R.id.calendarButton);
         calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements ConnectorInterfac
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
 
     }
 
@@ -88,7 +84,8 @@ public class MainActivity extends AppCompatActivity implements ConnectorInterfac
     public void userLoggedIn(User user) {
         Log.d("test", "User " + user + " logged in.");
         try {
-            Intent intent = new Intent(MainActivity.this, DenemeActivity.class);
+            //Intent intent = new Intent(MainActivity.this, DenemeActivity.class);
+            Intent intent = new Intent(MainActivity.this, CalendarActivity2.class);
             startActivity(intent);
         } catch(Exception e){
             e.printStackTrace();

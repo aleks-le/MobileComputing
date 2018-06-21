@@ -79,6 +79,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/calendar_view"
         android:layout_toStartOf="@+id/next_button"
-        android:text="Add group" />
+        android:text="my group" />
 
 </RelativeLayout>

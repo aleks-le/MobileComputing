@@ -23,9 +23,7 @@
         <activity android:name=".Group.GroupChatActivity"/>
         <activity android:name=".Group.GroupPageActivity"/>
         <activity android:name=".SignInActivity"/>
-        <activity android:name=".Calendar.CalendarActivity" />
-        <activity android:name=".Calendar.EventActivity" />
-        <activity android:name=".Calendar.DayActivity" />
+        <activity android:name=".Calendar.Event.EventActivity" />
         <activity android:name=".Group.GroupActivity" />
         <activity android:name=".MainPageActivity" />
         <activity android:name=".Calendar.CalendarActivity2"></activity>

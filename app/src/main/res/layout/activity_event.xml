@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Calendar.Event">
+    tools:context=".Calendar.Event.Event">
 
     <TextView
         android:id="@+id/description"
@@ -76,7 +76,7 @@
         android:ems="10"
         android:inputType="date"
         android:text="Only if different from Start Date"
-        android:textSize="18sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventStartDate" />
 

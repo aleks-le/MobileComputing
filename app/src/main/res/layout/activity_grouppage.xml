@@ -22,7 +22,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/createGroupButton"
+            android:id="@+id/createGroupButton4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -30,5 +30,17 @@
             android:padding="20dp"
             android:scaleType="fitCenter"
             android:text="Create Group" />
+
+        <Button
+            android:id="@+id/goBackButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="1"
+            android:padding="20dp"
+            android:scaleType="fitCenter"
+            android:text="Go back to calendar" />
+
     </LinearLayout>
 </LinearLayout>

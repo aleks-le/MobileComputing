@@ -1,33 +1,23 @@
-package com.deneme.caulis.caulis.Calendar;
+package com.deneme.caulis.caulis.Calendar.Event;
 
-import android.Manifest;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.provider.CalendarContract;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
-import java.time.format.DateTimeFormatter;
 
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.deneme.caulis.caulis.Calendar.CalendarActivity2;
 import com.deneme.caulis.caulis.R;
 import com.deneme.caulis.caulis.model.ConnectorInterface;
 import com.deneme.caulis.caulis.model.firebase.FirebaseConnector;
 
-import java.sql.Time;
 import java.util.Date;
 
 public class EventActivity extends AppCompatActivity implements View.OnClickListener{

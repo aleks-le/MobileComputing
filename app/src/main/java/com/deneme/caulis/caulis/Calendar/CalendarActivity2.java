@@ -2,13 +2,15 @@ package com.deneme.caulis.caulis.Calendar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.deneme.caulis.caulis.Calendar.Event.Event;
+import com.deneme.caulis.caulis.Calendar.Tab.SlidingTabLayout;
+import com.deneme.caulis.caulis.Calendar.Tab.ViewTabAdapter;
 import com.deneme.caulis.caulis.R;
 
 import java.sql.Time;

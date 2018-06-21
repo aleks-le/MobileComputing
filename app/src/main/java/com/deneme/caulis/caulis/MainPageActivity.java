@@ -10,8 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-
-import com.deneme.caulis.caulis.Calendar.CalendarActivity;
+import com.deneme.caulis.caulis.Calendar.CalendarActivity2;
 
 public class MainPageActivity extends AppCompatActivity {
 
@@ -48,7 +47,7 @@ public class MainPageActivity extends AppCompatActivity {
                // startActivity(new Intent(MainPageActivity.this, CalendarActivity.class));
 
                 try {
-                    Intent intent = new Intent(MainPageActivity.this, CalendarActivity.class);
+                    Intent intent = new Intent(MainPageActivity.this, CalendarActivity2.class);
                     startActivity(intent);
                 } catch(Exception e){
                     e.printStackTrace();

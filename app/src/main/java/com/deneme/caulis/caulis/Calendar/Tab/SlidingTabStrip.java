@@ -1,4 +1,4 @@
-package com.deneme.caulis.caulis.Calendar;
+package com.deneme.caulis.caulis.Calendar.Tab;
 
 /*
  * Copyright 2014 Google Inc. All rights reserved.

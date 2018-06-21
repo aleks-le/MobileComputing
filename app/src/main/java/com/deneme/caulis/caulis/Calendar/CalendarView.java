@@ -15,6 +15,7 @@ import android.widget.OverScroller;
 
 //import com.github.sundeepk.CalendarView.domain.Event;
 
+import com.deneme.caulis.caulis.Calendar.Event.Event;
 import com.deneme.caulis.caulis.classes.CaulisCalendar;
 import com.deneme.caulis.caulis.classes.CaulisEvent;
 

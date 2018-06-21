@@ -7,9 +7,9 @@ package com.deneme.caulis.caulis.classes;
 
 
 
-import com.deneme.caulis.caulis.Calendar.Event;
-import com.deneme.caulis.caulis.Calendar.EventComparator;
-import com.deneme.caulis.caulis.Calendar.Events;
+import com.deneme.caulis.caulis.Calendar.Event.Event;
+import com.deneme.caulis.caulis.Calendar.Event.EventComparator;
+import com.deneme.caulis.caulis.Calendar.Event.Events;
 
 import java.util.ArrayList;
 import java.util.Calendar;

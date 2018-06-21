@@ -4,7 +4,7 @@
  **************************************************************************************************/
 
 
-package com.deneme.caulis.caulis.Calendar;
+package com.deneme.caulis.caulis.Calendar.Event;
 
 import android.graphics.Color;
 import android.support.annotation.Nullable;
